@@ -1,12 +1,7 @@
 package pi
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
 )
 
 type userCommand struct {
@@ -43,102 +38,40 @@ type updateParams struct {
 // }
 
 func (cC *createCommand) Execute(args []string) error {
-	apibase := os.Getenv("PIXELA_API_BASE")
-	if apibase == "" {
-		apibase = "pixe.la"
-	}
-
 	paramStruct := &createParams{
 		Token:      cC.Token,
 		Username:   cC.Username,
 		AgreeTerms: cC.AgreeTermsOfService,
 		NotMinor:   cC.NotMinor,
 	}
-	params, err := json.Marshal(paramStruct)
-	if err != nil {
-		return fmt.Errorf("Failed to marshal options to json : %s", err)
-	}
 
-	req, err := http.NewRequest(
+	req, err := generateRequest(
 		"POST",
-		fmt.Sprintf("https://%s/v1/users", apibase),
-		bytes.NewBuffer(params),
+		"/v1/users",
+		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to create api request : %s", err)
+		return fmt.Errorf("Failed to generate create api request : %s", err)
 	}
 
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return fmt.Errorf("Failed to request api : %s", err)
-	}
-
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("Failed to get response body : %s", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode > 299 {
-		return fmt.Errorf("%s", string(b))
-	}
-
-	fmt.Println(string(b))
-
-	return nil
+	err = doRequest(req)
+	return err
 }
 
 func (uC *updateCommand) Execute(args []string) error {
-	apibase := os.Getenv("PIXELA_API_BASE")
-	if apibase == "" {
-		apibase = "pixe.la"
-	}
-
-	token := os.Getenv("PIXELA_USER_TOKEN")
-	if token == "" {
-		return fmt.Errorf("Token is not set. Please specify your token by PIXELA_USER_TOKEN environment variable.")
-	}
-
 	paramStruct := &updateParams{
 		NewToken: uC.NewToken,
 	}
-	params, err := json.Marshal(paramStruct)
-	if err != nil {
-		return fmt.Errorf("Failed to marshal options to json : %s", err)
-	}
 
-	req, err := http.NewRequest(
+	req, err := generateRequestWithToken(
 		"PUT",
-		fmt.Sprintf("https://%s/v1/users/%s", apibase, uC.Username),
-		bytes.NewBuffer(params),
+		fmt.Sprintf("/v1/users/%s", uC.Username),
+		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to create api request : %s", err)
+		return fmt.Errorf("Failed to generate update api request : %s", err)
 	}
 
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-USER-TOKEN", token)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return fmt.Errorf("Failed to request api : %s", err)
-	}
-
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("Failed to get response body : %s", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode > 299 {
-		return fmt.Errorf("%s", string(b))
-	}
-
-	fmt.Println(string(b))
-
-	return nil
+	err = doRequest(req)
+	return err
 }
