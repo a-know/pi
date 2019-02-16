@@ -4,7 +4,7 @@ deps:
 	env GO111MODULE=on go mod download
 
 test: deps
-	$(GO) test
+	gotest -v -cover .
 
 build: deps
 	$(GO) build ./cmd/pi

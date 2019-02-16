@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var tests = []struct {
+var userTests = []struct {
 	name     string
 	input    []string
 	exitCode int
@@ -57,8 +57,8 @@ var tests = []struct {
 	},
 }
 
-func TestGet(t *testing.T) {
-	for _, tt := range tests {
+func TestUser(t *testing.T) {
+	for _, tt := range userTests {
 		exitCode := (&CLI{
 			ErrStream: ioutil.Discard,
 			OutStream: ioutil.Discard,
