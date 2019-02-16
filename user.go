@@ -7,6 +7,7 @@ import (
 type userCommand struct {
 	Create createCommand `description:"create User" command:"create" subcommands-optional:"true"`
 	Update updateCommand `description:"update User Token" command:"update" subcommands-optional:"true"`
+	Delete deleteCommand `description:"delete User" command:"delete" subcommands-optional:"true"`
 }
 
 type createCommand struct {
@@ -31,6 +32,12 @@ type updateCommand struct {
 type updateParams struct {
 	NewToken string `json:"newToken"`
 }
+
+type deleteCommand struct {
+	Username string `short:"u" long:"username" description:"User name to be deleted." required:"true"`
+}
+
+type deleteParams struct{}
 
 // func (b *userCommand) Execute(args []string) error {
 // 	fmt.Println("pi user running.")
@@ -70,6 +77,22 @@ func (uC *updateCommand) Execute(args []string) error {
 	)
 	if err != nil {
 		return fmt.Errorf("Failed to generate update api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func (uC *deleteCommand) Execute(args []string) error {
+	paramStruct := &deleteParams{}
+
+	req, err := generateRequestWithToken(
+		"DELETE",
+		fmt.Sprintf("/v1/users/%s", uC.Username),
+		paramStruct,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate delete api request : %s", err)
 	}
 
 	err = doRequest(req)
