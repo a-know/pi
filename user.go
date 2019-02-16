@@ -54,7 +54,7 @@ func (cC *createUserCommand) Execute(args []string) error {
 
 	req, err := generateRequest(
 		"POST",
-		"/v1/users",
+		"v1/users",
 		paramStruct,
 	)
 	if err != nil {
@@ -72,7 +72,7 @@ func (uC *updateUserCommand) Execute(args []string) error {
 
 	req, err := generateRequestWithToken(
 		"PUT",
-		fmt.Sprintf("/v1/users/%s", uC.Username),
+		fmt.Sprintf("v1/users/%s", uC.Username),
 		paramStruct,
 	)
 	if err != nil {
@@ -88,7 +88,7 @@ func (uC *deleteUserCommand) Execute(args []string) error {
 
 	req, err := generateRequestWithToken(
 		"DELETE",
-		fmt.Sprintf("/v1/users/%s", uC.Username),
+		fmt.Sprintf("v1/users/%s", uC.Username),
 		paramStruct,
 	)
 	if err != nil {

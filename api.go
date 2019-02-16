@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -15,15 +16,21 @@ func generateRequest(method string, path string, paramStruct interface{}) (*http
 		apibase = "pixe.la"
 	}
 
-	params, err := json.Marshal(paramStruct)
-	if err != nil {
-		return nil, fmt.Errorf("Failed to marshal options to json : %s", err)
+	var reqBody io.Reader
+	if paramStruct == nil {
+		reqBody = nil
+	} else {
+		params, err := json.Marshal(paramStruct)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to marshal options to json : %s", err)
+		}
+		reqBody = bytes.NewBuffer(params)
 	}
 
 	req, err := http.NewRequest(
 		method,
 		fmt.Sprintf("https://%s/%s", apibase, path),
-		bytes.NewBuffer(params),
+		reqBody,
 	)
 
 	if err == nil {

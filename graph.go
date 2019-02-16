@@ -4,6 +4,7 @@ import "fmt"
 
 type graphCommand struct {
 	Create createGraphCommand `description:"create Graph" command:"create" subcommands-optional:"true"`
+	Get    getGraphCommand    `description:"get Graph Definition" command:"get" subcommands-optional:"true"`
 }
 
 type createGraphCommand struct {
@@ -26,6 +27,11 @@ type createGraphParam struct {
 	SelfSufficient string `json:"selfSufficient"`
 }
 
+type getGraphCommand struct {
+	Username string `long:"username" description:"User name of graph owener." required:"true"`
+}
+type getGraphParam struct{}
+
 func (cG *createGraphCommand) Execute(args []string) error {
 	paramStruct := &createGraphParam{
 		ID:             cG.ID,
@@ -39,8 +45,22 @@ func (cG *createGraphCommand) Execute(args []string) error {
 
 	req, err := generateRequestWithToken(
 		"POST",
-		fmt.Sprintf("/v1/users/%s/graphs", cG.Username),
+		fmt.Sprintf("v1/users/%s/graphs", cG.Username),
 		paramStruct,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate create api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func (gG *getGraphCommand) Execute(args []string) error {
+	req, err := generateRequestWithToken(
+		"GET",
+		fmt.Sprintf("v1/users/%s/graphs", gG.Username),
+		nil,
 	)
 	if err != nil {
 		return fmt.Errorf("Failed to generate create api request : %s", err)
