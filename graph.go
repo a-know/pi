@@ -9,6 +9,7 @@ type graphCommand struct {
 	Create createGraphCommand `description:"create Graph" command:"create" subcommands-optional:"true"`
 	Get    getGraphCommand    `description:"get Graph Definition" command:"get" subcommands-optional:"true"`
 	SVG    graphSVGCommand    `description:"get SVG Graph URL" command:"svg" subcommands-optional:"true"`
+	Update updateGraphCommand `description:"update Graph Definition" command:"update" subcommands-optional:"true"`
 }
 
 type createGraphCommand struct {
@@ -39,6 +40,25 @@ type getGraphParam struct{}
 type graphSVGCommand struct {
 	Username string `long:"username" description:"User name of graph owener." required:"true"`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+}
+
+type updateGraphCommand struct {
+	Username       string   `long:"username" description:"User name of graph owener." required:"true"`
+	ID             string   `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	Name           string   `long:"name" description:"The name of the pixelation graph."`
+	Unit           string   `long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory."`
+	Color          string   `long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro"`
+	Timezone       string   `long:"timezone" description:"The timezone for handling this graph"`
+	PurgeCacheURLs []string `long:"purge-cache-urls" description:"he URL to send the purge request to purge the cache when the graph is updated."`
+	SelfSufficient string   `long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
+}
+type updateGraphParam struct {
+	Name           string   `json:"Name"`
+	Unit           string   `json:"Unit"`
+	Color          string   `json:"Color"`
+	Timezone       string   `json:"Timezone"`
+	PurgeCacheURLs []string `json:"PurgeCacheURLs"`
+	SelfSufficient string   `json:"SelfSufficient"`
 }
 
 func (cG *createGraphCommand) Execute(args []string) error {
@@ -86,4 +106,31 @@ func (gS *graphSVGCommand) Execute(args []string) error {
 	}
 	fmt.Printf("https://%s/v1/users/%s/graphs/%s", apibase, gS.Username, gS.ID)
 	return nil
+}
+
+func (uG *updateGraphCommand) Execute(args []string) error {
+	if len(uG.PurgeCacheURLs) > 5 {
+		return fmt.Errorf("You can only specify up to five URLs for PurgeCacheURLs param.")
+	}
+
+	paramStruct := &updateGraphParam{
+		Name:           uG.Name,
+		Unit:           uG.Unit,
+		Color:          uG.Color,
+		Timezone:       uG.Timezone,
+		PurgeCacheURLs: uG.PurgeCacheURLs,
+		SelfSufficient: uG.SelfSufficient,
+	}
+
+	req, err := generateRequestWithToken(
+		"PUT",
+		fmt.Sprintf("v1/users/%s/graphs/%s", uG.Username, uG.ID),
+		paramStruct,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate create api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
 }

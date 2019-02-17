@@ -70,6 +70,31 @@ var graphTests = []struct {
 		input:    []string{"graph", "svg", "--username", "c-know"},
 		exitCode: 1,
 	},
+	{
+		name:     "update graph - not specify id",
+		input:    []string{"graph", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--username", "c-know", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b"},
+		exitCode: 1,
+	},
+	{
+		name:     "update graph - not specify username",
+		input:    []string{"graph", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--id", "test-id", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b"},
+		exitCode: 1,
+	},
+	{
+		name:     "update graph - invalid color name",
+		input:    []string{"graph", "update", "--name", "test-name", "--unit", "commits", "--color", "rainbow", "--username", "c-know", "--id", "test-id", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b"},
+		exitCode: 1,
+	},
+	{
+		name:     "update graph - invalid self-sufficient",
+		input:    []string{"graph", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--username", "c-know", "--id", "test-id", "--self-sufficient", "ok", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b"},
+		exitCode: 1,
+	},
+	{
+		name:     "update graph - purge cache urls limit over",
+		input:    []string{"graph", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--username", "c-know", "--id", "test-id", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b", "--purge-cache-urls", "http://example.com/c", "--purge-cache-urls", "http://example.com/d", "--purge-cache-urls", "http://example.com/e", "--purge-cache-urls", "http://example.com/f"},
+		exitCode: 2,
+	},
 }
 
 func TestGraph(t *testing.T) {
