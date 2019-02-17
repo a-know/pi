@@ -65,6 +65,16 @@ var pixelTests = []struct {
 		input:    []string{"pixel", "update", "--id", "test-id", "--date", "20190101", "--quantity", "1"},
 		exitCode: 1,
 	},
+	{
+		name:     "increment pixel - not specify id",
+		input:    []string{"pixel", "increment", "--username", "c-know"},
+		exitCode: 1,
+	},
+	{
+		name:     "increment pixel - not specify username",
+		input:    []string{"pixel", "increment", "--id", "test-id"},
+		exitCode: 1,
+	},
 }
 
 func TestPixel(t *testing.T) {
