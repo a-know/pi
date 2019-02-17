@@ -1,10 +1,14 @@
 package pi
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 type graphCommand struct {
 	Create createGraphCommand `description:"create Graph" command:"create" subcommands-optional:"true"`
 	Get    getGraphCommand    `description:"get Graph Definition" command:"get" subcommands-optional:"true"`
+	SVG    graphSVGCommand    `description:"get SVG Graph URL" command:"svg" subcommands-optional:"true"`
 }
 
 type createGraphCommand struct {
@@ -31,6 +35,11 @@ type getGraphCommand struct {
 	Username string `long:"username" description:"User name of graph owener." required:"true"`
 }
 type getGraphParam struct{}
+
+type graphSVGCommand struct {
+	Username string `long:"username" description:"User name of graph owener." required:"true"`
+	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+}
 
 func (cG *createGraphCommand) Execute(args []string) error {
 	paramStruct := &createGraphParam{
@@ -68,4 +77,13 @@ func (gG *getGraphCommand) Execute(args []string) error {
 
 	err = doRequest(req)
 	return err
+}
+
+func (gS *graphSVGCommand) Execute(args []string) error {
+	apibase := os.Getenv("PIXELA_API_BASE")
+	if apibase == "" {
+		apibase = "pixe.la"
+	}
+	fmt.Printf("https://%s/v1/users/%s/graphs/%s", apibase, gS.Username, gS.ID)
+	return nil
 }
