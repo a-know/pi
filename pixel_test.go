@@ -45,6 +45,26 @@ var pixelTests = []struct {
 		input:    []string{"pixel", "get", "--id", "test-id", "--date", "20190101"},
 		exitCode: 1,
 	},
+	{
+		name:     "update pixel - not specify id",
+		input:    []string{"pixel", "update", "--username", "c-know", "--date", "20190101", "--quantity", "1"},
+		exitCode: 1,
+	},
+	{
+		name:     "update pixel - not specify date",
+		input:    []string{"pixel", "update", "--username", "c-know", "--id", "test-id", "--quantity", "1"},
+		exitCode: 1,
+	},
+	{
+		name:     "update pixel - not specify quantity",
+		input:    []string{"pixel", "update", "--username", "c-know", "--id", "test-id", "--date", "20190101"},
+		exitCode: 1,
+	},
+	{
+		name:     "update pixel - not specify username",
+		input:    []string{"pixel", "update", "--id", "test-id", "--date", "20190101", "--quantity", "1"},
+		exitCode: 1,
+	},
 }
 
 func TestPixel(t *testing.T) {
