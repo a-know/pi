@@ -37,9 +37,9 @@ func (cli *CLI) Run(argv []string) int {
 }
 
 type piOpts struct {
-	User  userCommand  `description:"operate User" command:"user" subcommands-optional:"true"`
-	Graph graphCommand `description:"operate Graph" command:"graph" subcommands-optional:"true"`
-	Ver   verCommand   `description:"display version" command:"version" subcommands-optional:"true"`
+	Users  usersCommand  `description:"operate Users" command:"users" subcommands-optional:"true"`
+	Graphs graphsCommand `description:"operate Graphs" command:"graphs" subcommands-optional:"true"`
+	Ver    verCommand    `description:"display version" command:"version" subcommands-optional:"true"`
 }
 
 type verCommand struct{}

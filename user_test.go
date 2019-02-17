@@ -12,47 +12,47 @@ var userTests = []struct {
 }{
 	{
 		name:     "create user - not specify token",
-		input:    []string{"user", "create", "--agree-terms-of-service", "no", "--not-minor", "no", "--username", "c-know"},
+		input:    []string{"users", "create", "--agree-terms-of-service", "no", "--not-minor", "no", "--username", "c-know"},
 		exitCode: 1,
 	},
 	{
 		name:     "create user - not specify username",
-		input:    []string{"user", "create", "--agree-terms-of-service", "no", "--not-minor", "no", "--token", "thisissecret"},
+		input:    []string{"users", "create", "--agree-terms-of-service", "no", "--not-minor", "no", "--token", "thisissecret"},
 		exitCode: 1,
 	},
 	{
 		name:     "create user - not specify agree-terms",
-		input:    []string{"user", "create", "--not-minor", "no", "--username", "c-know", "--token", "thisissecret"},
+		input:    []string{"users", "create", "--not-minor", "no", "--username", "c-know", "--token", "thisissecret"},
 		exitCode: 1,
 	},
 	{
 		name:     "create user - not specify minor",
-		input:    []string{"user", "create", "--agree-terms-of-service", "no", "--username", "c-know", "--token", "thisissecret"},
+		input:    []string{"users", "create", "--agree-terms-of-service", "no", "--username", "c-know", "--token", "thisissecret"},
 		exitCode: 1,
 	},
 	{
 		name:     "create user - minor is invalid",
-		input:    []string{"user", "create", "--agree-terms-of-service", "no", "--not-minor", "ok", "--username", "c-know", "--token", "thisissecret"},
+		input:    []string{"users", "create", "--agree-terms-of-service", "no", "--not-minor", "ok", "--username", "c-know", "--token", "thisissecret"},
 		exitCode: 1,
 	},
 	{
 		name:     "create user - agreement is invalid",
-		input:    []string{"user", "create", "--agree-terms-of-service", "ok", "--not-minor", "no", "--username", "c-know", "--token", "thisissecret"},
+		input:    []string{"users", "create", "--agree-terms-of-service", "ok", "--not-minor", "no", "--username", "c-know", "--token", "thisissecret"},
 		exitCode: 1,
 	},
 	{
 		name:     "update user - not psecify username",
-		input:    []string{"user", "update", "--new-token", "thisissecret"},
+		input:    []string{"users", "update", "--new-token", "thisissecret"},
 		exitCode: 1,
 	},
 	{
 		name:     "update user - not psecify new-token",
-		input:    []string{"user", "update", "--username", "c-know"},
+		input:    []string{"users", "update", "--username", "c-know"},
 		exitCode: 1,
 	},
 	{
 		name:     "delete user - not psecify username",
-		input:    []string{"user", "delete"},
+		input:    []string{"users", "delete"},
 		exitCode: 1,
 	},
 }

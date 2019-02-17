@@ -5,9 +5,9 @@ import (
 	"os"
 )
 
-type graphCommand struct {
+type graphsCommand struct {
 	Create createGraphCommand `description:"create Graph" command:"create" subcommands-optional:"true"`
-	Get    getGraphCommand    `description:"get Graph Definition" command:"get" subcommands-optional:"true"`
+	Get    getGraphsCommand   `description:"get Graph Definitions" command:"get" subcommands-optional:"true"`
 	SVG    graphSVGCommand    `description:"get SVG Graph URL" command:"svg" subcommands-optional:"true"`
 	Update updateGraphCommand `description:"update Graph Definition" command:"update" subcommands-optional:"true"`
 	Detail graphDetailCommand `description:"get Graph detail URL" command:"detail" subcommands-optional:"true"`
@@ -34,7 +34,7 @@ type createGraphParam struct {
 	SelfSufficient string `json:"selfSufficient"`
 }
 
-type getGraphCommand struct {
+type getGraphsCommand struct {
 	Username string `long:"username" description:"User name of graph owner." required:"true"`
 }
 type getGraphParam struct{}
@@ -99,7 +99,7 @@ func (cG *createGraphCommand) Execute(args []string) error {
 	return err
 }
 
-func (gG *getGraphCommand) Execute(args []string) error {
+func (gG *getGraphsCommand) Execute(args []string) error {
 	req, err := generateRequestWithToken(
 		"GET",
 		fmt.Sprintf("v1/users/%s/graphs", gG.Username),

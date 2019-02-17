@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type userCommand struct {
+type usersCommand struct {
 	Create createUserCommand `description:"create User" command:"create" subcommands-optional:"true"`
 	Update updateUserCommand `description:"update User Token" command:"update" subcommands-optional:"true"`
 	Delete deleteUserCommand `description:"delete User" command:"delete" subcommands-optional:"true"`
