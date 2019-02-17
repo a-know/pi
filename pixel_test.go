@@ -75,6 +75,16 @@ var pixelTests = []struct {
 		input:    []string{"pixel", "increment", "--id", "test-id"},
 		exitCode: 1,
 	},
+	{
+		name:     "decrement pixel - not specify id",
+		input:    []string{"pixel", "decrement", "--username", "c-know"},
+		exitCode: 1,
+	},
+	{
+		name:     "decrement pixel - not specify username",
+		input:    []string{"pixel", "decrement", "--id", "test-id"},
+		exitCode: 1,
+	},
 }
 
 func TestPixel(t *testing.T) {

@@ -7,6 +7,7 @@ type pixelCommand struct {
 	Get       getPixelCommand       `description:"get a Pixel" command:"get" subcommands-optional:"true"`
 	Update    updatePixelCommand    `description:"update a Pixel" command:"update" subcommands-optional:"true"`
 	Increment incrementPixelCommand `description:"increment a Pixel" command:"increment" subcommands-optional:"true"`
+	Decrement decrementPixelCommand `description:"decrement a Pixel" command:"decrement" subcommands-optional:"true"`
 }
 
 type postPixelCommand struct {
@@ -41,6 +42,11 @@ type updatePixelParam struct {
 }
 
 type incrementPixelCommand struct {
+	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+}
+
+type decrementPixelCommand struct {
 	Username string `long:"username" description:"User name of graph owner." required:"true"`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 }
@@ -106,6 +112,20 @@ func (iP *incrementPixelCommand) Execute(args []string) error {
 	)
 	if err != nil {
 		return fmt.Errorf("Failed to generate increment api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func (dP *decrementPixelCommand) Execute(args []string) error {
+	req, err := generateRequestWithToken(
+		"PUT",
+		fmt.Sprintf("v1/users/%s/graphs/%s/decrement", dP.Username, dP.ID),
+		nil,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate decrement api request : %s", err)
 	}
 
 	err = doRequest(req)
