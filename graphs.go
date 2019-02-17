@@ -57,12 +57,12 @@ type updateGraphCommand struct {
 	SelfSufficient string   `long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
 }
 type updateGraphParam struct {
-	Name           string   `json:"Name"`
-	Unit           string   `json:"Unit"`
-	Color          string   `json:"Color"`
-	Timezone       string   `json:"Timezone"`
-	PurgeCacheURLs []string `json:"PurgeCacheURLs"`
-	SelfSufficient string   `json:"SelfSufficient"`
+	Name           string   `json:"name"`
+	Unit           string   `json:"unit"`
+	Color          string   `json:"color"`
+	Timezone       string   `json:"timezone"`
+	PurgeCacheURLs []string `json:"purgeCacheURLs"`
+	SelfSufficient string   `json:"selfSufficient"`
 }
 
 type graphDetailCommand struct {
