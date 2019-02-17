@@ -8,6 +8,7 @@ type pixelCommand struct {
 	Update    updatePixelCommand    `description:"update a Pixel" command:"update" subcommands-optional:"true"`
 	Increment incrementPixelCommand `description:"increment a Pixel" command:"increment" subcommands-optional:"true"`
 	Decrement decrementPixelCommand `description:"decrement a Pixel" command:"decrement" subcommands-optional:"true"`
+	Delete    deletePixelCommand    `description:"delete a Pixel" command:"delete" subcommands-optional:"true"`
 }
 
 type postPixelCommand struct {
@@ -49,6 +50,12 @@ type incrementPixelCommand struct {
 type decrementPixelCommand struct {
 	Username string `long:"username" description:"User name of graph owner." required:"true"`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+}
+
+type deletePixelCommand struct {
+	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date     string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
 }
 
 func (pP *postPixelCommand) Execute(args []string) error {
@@ -126,6 +133,20 @@ func (dP *decrementPixelCommand) Execute(args []string) error {
 	)
 	if err != nil {
 		return fmt.Errorf("Failed to generate decrement api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func (dP *deletePixelCommand) Execute(args []string) error {
+	req, err := generateRequestWithToken(
+		"DELETE",
+		fmt.Sprintf("v1/users/%s/graphs/%s/%s", dP.Username, dP.ID, dP.Date),
+		nil,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate delete api request : %s", err)
 	}
 
 	err = doRequest(req)
