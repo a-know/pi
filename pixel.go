@@ -4,6 +4,7 @@ import "fmt"
 
 type pixelCommand struct {
 	Post postPixelCommand `description:"post a Pixel" command:"post" subcommands-optional:"true"`
+	Get  getPixelCommand  `description:"get a Pixel" command:"get" subcommands-optional:"true"`
 }
 
 type postPixelCommand struct {
@@ -17,6 +18,12 @@ type postPixelParam struct {
 	Date         string `json:"date"`
 	Quantity     string `json:"quantity"`
 	OptionalData string `json:"optionalData"`
+}
+
+type getPixelCommand struct {
+	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date     string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
 }
 
 func (pP *postPixelCommand) Execute(args []string) error {
@@ -33,6 +40,20 @@ func (pP *postPixelCommand) Execute(args []string) error {
 	)
 	if err != nil {
 		return fmt.Errorf("Failed to generate create api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func (gP *getPixelCommand) Execute(args []string) error {
+	req, err := generateRequestWithToken(
+		"GET",
+		fmt.Sprintf("v1/users/%s/graphs/%s/%s", gP.Username, gP.ID, gP.Date),
+		nil,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate get api request : %s", err)
 	}
 
 	err = doRequest(req)
