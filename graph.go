@@ -41,6 +41,8 @@ type getGraphParam struct{}
 type graphSVGCommand struct {
 	Username string `long:"username" description:"User name of graph owner." required:"true"`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date     string `long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
+	Mode     string `long:"mode" description:"Specify the graph display mode." choice:"short"`
 }
 
 type updateGraphCommand struct {
@@ -110,7 +112,18 @@ func (gS *graphSVGCommand) Execute(args []string) error {
 	if apibase == "" {
 		apibase = "pixe.la"
 	}
-	fmt.Printf("https://%s/v1/users/%s/graphs/%s", apibase, gS.Username, gS.ID)
+	url := fmt.Sprintf("https://%s/v1/users/%s/graphs/%s", apibase, gS.Username, gS.ID)
+
+	if gS.Date != "" {
+		url = fmt.Sprintf("%s?date=%s", url, gS.Date)
+		if gS.Mode != "" {
+			url = fmt.Sprintf("%s&mode=%s", url, gS.Mode)
+		}
+	} else if gS.Mode != "" {
+		url = fmt.Sprintf("%s?mode=%s", url, gS.Mode)
+	}
+	fmt.Print(url)
+
 	return nil
 }
 
