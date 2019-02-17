@@ -110,6 +110,16 @@ var graphTests = []struct {
 		input:    []string{"graph", "detail", "--username", "c-know"},
 		exitCode: 1,
 	},
+	{
+		name:     "delete graph - not psecify username",
+		input:    []string{"graph", "delete", "--id", "test-id"},
+		exitCode: 1,
+	},
+	{
+		name:     "delete graph - not psecify id",
+		input:    []string{"graph", "delete", "--username", "c-know"},
+		exitCode: 1,
+	},
 }
 
 func TestGraph(t *testing.T) {

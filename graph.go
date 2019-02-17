@@ -11,6 +11,7 @@ type graphCommand struct {
 	SVG    graphSVGCommand    `description:"get SVG Graph URL" command:"svg" subcommands-optional:"true"`
 	Update updateGraphCommand `description:"update Graph Definition" command:"update" subcommands-optional:"true"`
 	Detail graphDetailCommand `description:"get Graph detail URL" command:"detail" subcommands-optional:"true"`
+	Delete deleteGraphCommand `description:"delete Graph" command:"delete" subcommands-optional:"true"`
 }
 
 type createGraphCommand struct {
@@ -69,6 +70,11 @@ type graphDetailCommand struct {
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
+type deleteGraphCommand struct {
+	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+}
+
 func (cG *createGraphCommand) Execute(args []string) error {
 	paramStruct := &createGraphParam{
 		ID:             cG.ID,
@@ -100,7 +106,7 @@ func (gG *getGraphCommand) Execute(args []string) error {
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate create api request : %s", err)
+		return fmt.Errorf("Failed to generate get api request : %s", err)
 	}
 
 	err = doRequest(req)
@@ -147,7 +153,7 @@ func (uG *updateGraphCommand) Execute(args []string) error {
 		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate create api request : %s", err)
+		return fmt.Errorf("Failed to generate update api request : %s", err)
 	}
 
 	err = doRequest(req)
@@ -161,4 +167,18 @@ func (gD *graphDetailCommand) Execute(args []string) error {
 	}
 	fmt.Printf("https://%s/v1/users/%s/graphs/%s.html", apibase, gD.Username, gD.ID)
 	return nil
+}
+
+func (dG *deleteGraphCommand) Execute(args []string) error {
+	req, err := generateRequestWithToken(
+		"DELETE",
+		fmt.Sprintf("v1/users/%s/graphs/%s", dG.Username, dG.ID),
+		nil,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate delete api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
 }
