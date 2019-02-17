@@ -10,10 +10,11 @@ type graphCommand struct {
 	Get    getGraphCommand    `description:"get Graph Definition" command:"get" subcommands-optional:"true"`
 	SVG    graphSVGCommand    `description:"get SVG Graph URL" command:"svg" subcommands-optional:"true"`
 	Update updateGraphCommand `description:"update Graph Definition" command:"update" subcommands-optional:"true"`
+	Detail graphDetailCommand `description:"get Graph detail URL" command:"detail" subcommands-optional:"true"`
 }
 
 type createGraphCommand struct {
-	Username       string `long:"username" description:"User name of graph owener." required:"true"`
+	Username       string `long:"username" description:"User name of graph owner." required:"true"`
 	ID             string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Name           string `long:"name" description:"The name of the pixelation graph." required:"true"`
 	Unit           string `long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory." required:"true"`
@@ -33,17 +34,17 @@ type createGraphParam struct {
 }
 
 type getGraphCommand struct {
-	Username string `long:"username" description:"User name of graph owener." required:"true"`
+	Username string `long:"username" description:"User name of graph owner." required:"true"`
 }
 type getGraphParam struct{}
 
 type graphSVGCommand struct {
-	Username string `long:"username" description:"User name of graph owener." required:"true"`
+	Username string `long:"username" description:"User name of graph owner." required:"true"`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type updateGraphCommand struct {
-	Username       string   `long:"username" description:"User name of graph owener." required:"true"`
+	Username       string   `long:"username" description:"User name of graph owner." required:"true"`
 	ID             string   `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Name           string   `long:"name" description:"The name of the pixelation graph."`
 	Unit           string   `long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory."`
@@ -59,6 +60,11 @@ type updateGraphParam struct {
 	Timezone       string   `json:"Timezone"`
 	PurgeCacheURLs []string `json:"PurgeCacheURLs"`
 	SelfSufficient string   `json:"SelfSufficient"`
+}
+
+type graphDetailCommand struct {
+	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 func (cG *createGraphCommand) Execute(args []string) error {
@@ -133,4 +139,13 @@ func (uG *updateGraphCommand) Execute(args []string) error {
 
 	err = doRequest(req)
 	return err
+}
+
+func (gD *graphDetailCommand) Execute(args []string) error {
+	apibase := os.Getenv("PIXELA_API_BASE")
+	if apibase == "" {
+		apibase = "pixe.la"
+	}
+	fmt.Printf("https://%s/v1/users/%s/graphs/%s.html", apibase, gD.Username, gD.ID)
+	return nil
 }

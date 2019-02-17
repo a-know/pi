@@ -95,6 +95,16 @@ var graphTests = []struct {
 		input:    []string{"graph", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--username", "c-know", "--id", "test-id", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b", "--purge-cache-urls", "http://example.com/c", "--purge-cache-urls", "http://example.com/d", "--purge-cache-urls", "http://example.com/e", "--purge-cache-urls", "http://example.com/f"},
 		exitCode: 2,
 	},
+	{
+		name:     "get graph detail url - not psecify username",
+		input:    []string{"graph", "detail", "--id", "test-id"},
+		exitCode: 1,
+	},
+	{
+		name:     "get graph detail url - not psecify id",
+		input:    []string{"graph", "detail", "--username", "c-know"},
+		exitCode: 1,
+	},
 }
 
 func TestGraph(t *testing.T) {
