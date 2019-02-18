@@ -4,6 +4,7 @@ import "fmt"
 
 type webhooksCommand struct {
 	Create createWebhookCommand `description:"create a Webhook" command:"create" subcommands-optional:"true"`
+	Get    getWebhooksCommand   `description:"get registered Webhooks" command:"get" subcommands-optional:"true"`
 }
 
 type createWebhookCommand struct {
@@ -14,6 +15,10 @@ type createWebhookCommand struct {
 type createWebhookParam struct {
 	ID   string `json:"graphID"`
 	Type string `json:"type"`
+}
+
+type getWebhooksCommand struct {
+	Username string `long:"username" description:"User name of graph owner." required:"true"`
 }
 
 func (cW *createWebhookCommand) Execute(args []string) error {
@@ -29,6 +34,20 @@ func (cW *createWebhookCommand) Execute(args []string) error {
 	)
 	if err != nil {
 		return fmt.Errorf("Failed to generate create api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func (gW *getWebhooksCommand) Execute(args []string) error {
+	req, err := generateRequestWithToken(
+		"GET",
+		fmt.Sprintf("v1/users/%s/webhooks", gW.Username),
+		nil,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate get api request : %s", err)
 	}
 
 	err = doRequest(req)

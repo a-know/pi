@@ -11,23 +11,28 @@ var webhookTests = []struct {
 	exitCode int
 }{
 	{
-		name:     "create graph - not specify id",
+		name:     "create webhook - not specify id",
 		input:    []string{"webhooks", "create", "--type", "increment", "--username", "c-know"},
 		exitCode: 1,
 	},
 	{
-		name:     "create graph - not specify type",
+		name:     "create webhook - not specify type",
 		input:    []string{"webhooks", "create", "--id", "test-id", "--username", "c-know"},
 		exitCode: 1,
 	},
 	{
-		name:     "create graph - not specify username",
+		name:     "create webhook - not specify username",
 		input:    []string{"webhooks", "create", "--id", "test-id", "--type", "increment"},
 		exitCode: 1,
 	},
 	{
-		name:     "create graph - invalid type",
+		name:     "create webhook - invalid type",
 		input:    []string{"webhooks", "create", "--id", "test-id", "--type", "none", "--username", "c-know"},
+		exitCode: 1,
+	},
+	{
+		name:     "get webhooks - not specify username",
+		input:    []string{"webhooks", "get"},
 		exitCode: 1,
 	},
 }
