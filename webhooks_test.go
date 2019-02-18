@@ -35,6 +35,16 @@ var webhookTests = []struct {
 		input:    []string{"webhooks", "get"},
 		exitCode: 1,
 	},
+	{
+		name:     "invoke webhook - not specify username",
+		input:    []string{"webhooks", "invoke", "--webhookHash", "hash"},
+		exitCode: 1,
+	},
+	{
+		name:     "invoke webhook - not specify WebhookHash",
+		input:    []string{"webhooks", "invoke", "--username", "c-know"},
+		exitCode: 1,
+	},
 }
 
 func TestWebhook(t *testing.T) {
