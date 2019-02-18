@@ -37,10 +37,11 @@ func (cli *CLI) Run(argv []string) int {
 }
 
 type piOpts struct {
-	Users  usersCommand  `description:"operate Users" command:"users" subcommands-optional:"true"`
-	Graphs graphsCommand `description:"operate Graphs" command:"graphs" subcommands-optional:"true"`
-	Pixel  pixelCommand  `description:"operate Pixel in Graph" command:"pixel" subcommands-optional:"true"`
-	Ver    verCommand    `description:"display version" command:"version" subcommands-optional:"true"`
+	Users    usersCommand    `description:"operate Users" command:"users" subcommands-optional:"true"`
+	Graphs   graphsCommand   `description:"operate Graphs" command:"graphs" subcommands-optional:"true"`
+	Pixel    pixelCommand    `description:"operate Pixel in Graph" command:"pixel" subcommands-optional:"true"`
+	Webhooks webhooksCommand `description:"operate Webhooks" command:"webhooks" subcommands-optional:"true"`
+	Ver      verCommand      `description:"display version" command:"version" subcommands-optional:"true"`
 }
 
 type verCommand struct{}
