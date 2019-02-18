@@ -6,6 +6,7 @@ type webhooksCommand struct {
 	Create createWebhookCommand `description:"create a Webhook" command:"create" subcommands-optional:"true"`
 	Get    getWebhooksCommand   `description:"get registered Webhooks" command:"get" subcommands-optional:"true"`
 	Unvoke invokeWebhookCommand `description:"invoke Webhook" command:"invoke" subcommands-optional:"true"`
+	Delete deleteWebhookCommand `description:"delete a Webhook" command:"delete" subcommands-optional:"true"`
 }
 
 type createWebhookCommand struct {
@@ -23,6 +24,11 @@ type getWebhooksCommand struct {
 }
 
 type invokeWebhookCommand struct {
+	Username    string `long:"username" description:"User name of graph owner." required:"true"`
+	WebhookHash string `long:"webhookHash" description:"Specify webhookHash of registered webhook." required:"true"`
+}
+
+type deleteWebhookCommand struct {
 	Username    string `long:"username" description:"User name of graph owner." required:"true"`
 	WebhookHash string `long:"webhookHash" description:"Specify webhookHash of registered webhook." required:"true"`
 }
@@ -68,6 +74,20 @@ func (iW *invokeWebhookCommand) Execute(args []string) error {
 	)
 	if err != nil {
 		return fmt.Errorf("Failed to generate invoke api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func (dW *deleteWebhookCommand) Execute(args []string) error {
+	req, err := generateRequestWithToken(
+		"DELETE",
+		fmt.Sprintf("v1/users/%s/webhooks/%s", dW.Username, dW.WebhookHash),
+		nil,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate delete api request : %s", err)
 	}
 
 	err = doRequest(req)
