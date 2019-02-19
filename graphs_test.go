@@ -120,6 +120,16 @@ var graphTests = []struct {
 		input:    []string{"graphs", "delete", "--username", "c-know"},
 		exitCode: 1,
 	},
+	{
+		name:     "get graph pixels - not psecify username",
+		input:    []string{"graphs", "pixels", "--id", "test-id"},
+		exitCode: 1,
+	},
+	{
+		name:     "get graph pixels - not psecify id",
+		input:    []string{"graphs", "pixels", "--username", "c-know"},
+		exitCode: 1,
+	},
 }
 
 func TestGraph(t *testing.T) {

@@ -6,12 +6,13 @@ import (
 )
 
 type graphsCommand struct {
-	Create createGraphCommand `description:"create Graph" command:"create" subcommands-optional:"true"`
-	Get    getGraphsCommand   `description:"get Graph Definitions" command:"get" subcommands-optional:"true"`
-	SVG    graphSVGCommand    `description:"get SVG Graph URL" command:"svg" subcommands-optional:"true"`
-	Update updateGraphCommand `description:"update Graph Definition" command:"update" subcommands-optional:"true"`
-	Detail graphDetailCommand `description:"get Graph detail URL" command:"detail" subcommands-optional:"true"`
-	Delete deleteGraphCommand `description:"delete Graph" command:"delete" subcommands-optional:"true"`
+	Create createGraphCommand    `description:"create Graph" command:"create" subcommands-optional:"true"`
+	Get    getGraphsCommand      `description:"get Graph Definitions" command:"get" subcommands-optional:"true"`
+	SVG    graphSVGCommand       `description:"get SVG Graph URL" command:"svg" subcommands-optional:"true"`
+	Update updateGraphCommand    `description:"update Graph Definition" command:"update" subcommands-optional:"true"`
+	Detail graphDetailCommand    `description:"get Graph detail URL" command:"detail" subcommands-optional:"true"`
+	Delete deleteGraphCommand    `description:"delete Graph" command:"delete" subcommands-optional:"true"`
+	Pixels getGraphPixelsCommand `description:"get Graph Pixels" command:"pixels" subcommands-optional:"true"`
 }
 
 type createGraphCommand struct {
@@ -73,6 +74,13 @@ type graphDetailCommand struct {
 type deleteGraphCommand struct {
 	Username string `long:"username" description:"User name of graph owner." required:"true"`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+}
+
+type getGraphPixelsCommand struct {
+	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	From     string `long:"from" description:"Specify the start position of the period."`
+	To       string `long:"to" description:"Specify the end position of the period."`
 }
 
 func (cG *createGraphCommand) Execute(args []string) error {
@@ -177,6 +185,31 @@ func (dG *deleteGraphCommand) Execute(args []string) error {
 	)
 	if err != nil {
 		return fmt.Errorf("Failed to generate delete api request : %s", err)
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func (gGP *getGraphPixelsCommand) Execute(args []string) error {
+	url := fmt.Sprintf("v1/users/%s/graphs/%s/pixels", gGP.Username, gGP.ID)
+
+	if gGP.From != "" {
+		url = fmt.Sprintf("%s?from=%s", url, gGP.From)
+		if gGP.To != "" {
+			url = fmt.Sprintf("%s&to=%s", url, gGP.To)
+		}
+	} else if gGP.To != "" {
+		url = fmt.Sprintf("%s?to=%s", url, gGP.To)
+	}
+
+	req, err := generateRequestWithToken(
+		"GET",
+		url,
+		nil,
+	)
+	if err != nil {
+		return fmt.Errorf("Failed to generate get api request : %s", err)
 	}
 
 	err = doRequest(req)
