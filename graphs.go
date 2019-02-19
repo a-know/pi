@@ -118,20 +118,35 @@ func generateCreateGraphRequest(cG *createGraphCommand) (*http.Request, error) {
 }
 
 func (gG *getGraphsCommand) Execute(args []string) error {
-	req, err := generateRequestWithToken(
-		"GET",
-		fmt.Sprintf("v1/users/%s/graphs", gG.Username),
-		nil,
-	)
+	req, err := generateGetGraphsRequest(gG)
 	if err != nil {
-		return fmt.Errorf("Failed to generate get api request : %s", err)
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
+func generateGetGraphsRequest(gG *getGraphsCommand) (*http.Request, error) {
+	req, err := generateRequestWithToken(
+		"GET",
+		fmt.Sprintf("v1/users/%s/graphs", gG.Username),
+		nil,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate get api request : %s", err)
+	}
+
+	return req, nil
+}
+
 func (gS *graphSVGCommand) Execute(args []string) error {
+	url := generateSVGUrl(gS)
+	fmt.Print(url)
+	return nil
+}
+
+func generateSVGUrl(gS *graphSVGCommand) string {
 	apibase := os.Getenv("PIXELA_API_BASE")
 	if apibase == "" {
 		apibase = "pixe.la"
@@ -146,9 +161,7 @@ func (gS *graphSVGCommand) Execute(args []string) error {
 	} else if gS.Mode != "" {
 		url = fmt.Sprintf("%s?mode=%s", url, gS.Mode)
 	}
-	fmt.Print(url)
-
-	return nil
+	return url
 }
 
 func (uG *updateGraphCommand) Execute(args []string) error {
