@@ -2,6 +2,7 @@ package pi
 
 import (
 	"fmt"
+	"net/http"
 )
 
 type usersCommand struct {
@@ -37,14 +38,23 @@ type deleteUserCommand struct {
 	Username string `long:"username" description:"User name to be deleted." required:"true"`
 }
 
-type deleteUserParams struct{}
-
 // func (b *userCommand) Execute(args []string) error {
 // 	fmt.Println("pi user running.")
 // 	return nil
 // }
 
 func (cC *createUserCommand) Execute(args []string) error {
+
+	req, err := generateCreateUserRequest(cC)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generateCreateUserRequest(cC *createUserCommand) (*http.Request, error) {
 	paramStruct := &createUserParams{
 		Token:      cC.Token,
 		Username:   cC.Username,
@@ -58,14 +68,22 @@ func (cC *createUserCommand) Execute(args []string) error {
 		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate create api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate create api request : %s", err)
+	}
+	return req, nil
+}
+
+func (uC *updateUserCommand) Execute(args []string) error {
+	req, err := generateUpdateUserRequest(uC)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (uC *updateUserCommand) Execute(args []string) error {
+func generateUpdateUserRequest(uC *updateUserCommand) (*http.Request, error) {
 	paramStruct := &updateUserParams{
 		NewToken: uC.NewToken,
 	}
@@ -76,25 +94,29 @@ func (uC *updateUserCommand) Execute(args []string) error {
 		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate update api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate update api request : %s", err)
+	}
+	return req, nil
+}
+
+func (dC *deleteUserCommand) Execute(args []string) error {
+	req, err := generateDeleteUserRequest(dC)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (uC *deleteUserCommand) Execute(args []string) error {
-	paramStruct := &deleteUserParams{}
-
+func generateDeleteUserRequest(dC *deleteUserCommand) (*http.Request, error) {
 	req, err := generateRequestWithToken(
 		"DELETE",
-		fmt.Sprintf("v1/users/%s", uC.Username),
-		paramStruct,
+		fmt.Sprintf("v1/users/%s", dC.Username),
+		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate delete api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate delete api request : %s", err)
 	}
-
-	err = doRequest(req)
-	return err
+	return req, nil
 }

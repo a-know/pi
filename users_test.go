@@ -1,7 +1,9 @@
 package pi
 
 import (
+	"fmt"
 	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -66,5 +68,138 @@ func TestUser(t *testing.T) {
 		if exitCode != tt.exitCode {
 			t.Errorf("%s(exitCode): out=%d want=%d", tt.name, exitCode, tt.exitCode)
 		}
+	}
+}
+
+func TestGenerateCreateUserRequest(t *testing.T) {
+	// prepare
+	beforeEnv := os.Getenv("PIXELA_API_BASE")
+	afterEnv := "pixela.example.com"
+	os.Setenv("PIXELA_API_BASE", afterEnv)
+
+	testToken := "thisissecret"
+	testUsername := "c-know"
+	testAgreeTermsOfService := "false"
+	testNotMinor := "true"
+	cmd := &createUserCommand{
+		Token:               testToken,
+		Username:            testUsername,
+		AgreeTermsOfService: testAgreeTermsOfService,
+		NotMinor:            testNotMinor,
+	}
+
+	// run
+	req, err := generateCreateUserRequest(cmd)
+
+	// cleanup
+	os.Setenv("PIXELA_API_BASE", beforeEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "POST" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/%s", afterEnv, "v1/users") {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"token":"%s","username":"%s","agreeTermsOfService":"%s","notMinor":"%s"}`, testToken, testUsername, testAgreeTermsOfService, testNotMinor) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateUpdateUserRequest(t *testing.T) {
+	// prepare
+	beforeEnv := os.Getenv("PIXELA_API_BASE")
+	afterEnv := "pixela.example.com"
+	os.Setenv("PIXELA_API_BASE", afterEnv)
+	beforeTokenEnv := os.Getenv("PIXELA_USER_TOKEN")
+	afterTokenEnv := "thisissecret"
+	os.Setenv("PIXELA_USER_TOKEN", afterTokenEnv)
+
+	testUsername := "c-know"
+	testNewToken := "thisissecret"
+	cmd := &updateUserCommand{
+		Username: testUsername,
+		NewToken: testNewToken,
+	}
+
+	// run
+	req, err := generateUpdateUserRequest(cmd)
+
+	// cleanup
+	os.Setenv("PIXELA_API_BASE", beforeEnv)
+	os.Setenv("PIXELA_USER_TOKEN", beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "PUT" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/%s/%s", afterEnv, "v1/users", testUsername) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"newToken":"%s"}`, testNewToken) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+	if req.Header.Get("X-USER-TOKEN") != afterTokenEnv {
+		t.Errorf("Unexpected request header. %s", req.Header.Get("X-USER-TOKEN"))
+	}
+}
+
+func TestGenerateDeleteUserRequest(t *testing.T) {
+	// prepare
+	beforeEnv := os.Getenv("PIXELA_API_BASE")
+	afterEnv := "pixela.example.com"
+	os.Setenv("PIXELA_API_BASE", afterEnv)
+	beforeTokenEnv := os.Getenv("PIXELA_USER_TOKEN")
+	afterTokenEnv := "thisissecret"
+	os.Setenv("PIXELA_USER_TOKEN", afterTokenEnv)
+
+	testUsername := "c-know"
+	cmd := &deleteUserCommand{
+		Username: testUsername,
+	}
+
+	// run
+	req, err := generateDeleteUserRequest(cmd)
+
+	// cleanup
+	os.Setenv("PIXELA_API_BASE", beforeEnv)
+	os.Setenv("PIXELA_USER_TOKEN", beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "DELETE" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/%s/%s", afterEnv, "v1/users", testUsername) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		defer req.Body.Close()
+		if err != nil {
+			t.Errorf("Failed to read request body. %s", err)
+		}
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+	if req.Header.Get("X-USER-TOKEN") != afterTokenEnv {
+		t.Errorf("Unexpected request header. %s", req.Header.Get("X-USER-TOKEN"))
 	}
 }
