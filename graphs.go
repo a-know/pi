@@ -2,6 +2,7 @@ package pi
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 )
 
@@ -84,6 +85,16 @@ type getGraphPixelsCommand struct {
 }
 
 func (cG *createGraphCommand) Execute(args []string) error {
+	req, err := generateCreateGraphRequest(cG)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generateCreateGraphRequest(cG *createGraphCommand) (*http.Request, error) {
 	paramStruct := &createGraphParam{
 		ID:             cG.ID,
 		Name:           cG.Name,
@@ -100,11 +111,10 @@ func (cG *createGraphCommand) Execute(args []string) error {
 		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate create api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate create api request : %s", err)
 	}
 
-	err = doRequest(req)
-	return err
+	return req, nil
 }
 
 func (gG *getGraphsCommand) Execute(args []string) error {

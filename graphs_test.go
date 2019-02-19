@@ -1,6 +1,7 @@
 package pi
 
 import (
+	"fmt"
 	"io/ioutil"
 	"testing"
 )
@@ -141,5 +142,54 @@ func TestGraph(t *testing.T) {
 		if exitCode != tt.exitCode {
 			t.Errorf("%s(exitCode): out=%d want=%d", tt.name, exitCode, tt.exitCode)
 		}
+	}
+}
+
+func TestGenerateCreateGraphRequest(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testName := "test-name"
+	testUnit := "commits"
+	testType := "int"
+	testColor := "ajisai"
+	testTimezone := "asia/Tokyo"
+	testSelfSufficient := "none"
+	cmd := &createGraphCommand{
+		Username:       testUsername,
+		ID:             testID,
+		Name:           testName,
+		Unit:           testUnit,
+		Type:           testType,
+		Color:          testColor,
+		Timezone:       testTimezone,
+		SelfSufficient: testSelfSufficient,
+	}
+
+	// run
+	req, err := generateCreateGraphRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "POST" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs", afterAPIBaseEnv, testUsername) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"id":"%s","name":"%s","unit":"%s","type":"%s","color":"%s","timezone":"%s","selfSufficient":"%s"}`, testID, testName, testUnit, testType, testColor, testTimezone, testSelfSufficient) {
+		t.Errorf("Unexpected request body. %s", string(b))
 	}
 }

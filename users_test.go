@@ -3,7 +3,6 @@ package pi
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 	"testing"
 )
 
@@ -73,9 +72,7 @@ func TestUser(t *testing.T) {
 
 func TestGenerateCreateUserRequest(t *testing.T) {
 	// prepare
-	beforeEnv := os.Getenv("PIXELA_API_BASE")
-	afterEnv := "pixela.example.com"
-	os.Setenv("PIXELA_API_BASE", afterEnv)
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
 
 	testToken := "thisissecret"
 	testUsername := "c-know"
@@ -92,7 +89,7 @@ func TestGenerateCreateUserRequest(t *testing.T) {
 	req, err := generateCreateUserRequest(cmd)
 
 	// cleanup
-	os.Setenv("PIXELA_API_BASE", beforeEnv)
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
 
 	// assertion
 	if err != nil {
@@ -101,7 +98,7 @@ func TestGenerateCreateUserRequest(t *testing.T) {
 	if req.Method != "POST" {
 		t.Errorf("Unexpected request method. %s", req.Method)
 	}
-	if req.URL.String() != fmt.Sprintf("https://%s/%s", afterEnv, "v1/users") {
+	if req.URL.String() != fmt.Sprintf("https://%s/%s", afterAPIBaseEnv, "v1/users") {
 		t.Errorf("Unexpected request path. %s", req.URL.String())
 	}
 	b, err := ioutil.ReadAll(req.Body)
@@ -116,12 +113,7 @@ func TestGenerateCreateUserRequest(t *testing.T) {
 
 func TestGenerateUpdateUserRequest(t *testing.T) {
 	// prepare
-	beforeEnv := os.Getenv("PIXELA_API_BASE")
-	afterEnv := "pixela.example.com"
-	os.Setenv("PIXELA_API_BASE", afterEnv)
-	beforeTokenEnv := os.Getenv("PIXELA_USER_TOKEN")
-	afterTokenEnv := "thisissecret"
-	os.Setenv("PIXELA_USER_TOKEN", afterTokenEnv)
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, afterTokenEnv := prepare()
 
 	testUsername := "c-know"
 	testNewToken := "thisissecret"
@@ -134,8 +126,7 @@ func TestGenerateUpdateUserRequest(t *testing.T) {
 	req, err := generateUpdateUserRequest(cmd)
 
 	// cleanup
-	os.Setenv("PIXELA_API_BASE", beforeEnv)
-	os.Setenv("PIXELA_USER_TOKEN", beforeTokenEnv)
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
 
 	// assertion
 	if err != nil {
@@ -144,7 +135,7 @@ func TestGenerateUpdateUserRequest(t *testing.T) {
 	if req.Method != "PUT" {
 		t.Errorf("Unexpected request method. %s", req.Method)
 	}
-	if req.URL.String() != fmt.Sprintf("https://%s/%s/%s", afterEnv, "v1/users", testUsername) {
+	if req.URL.String() != fmt.Sprintf("https://%s/%s/%s", afterAPIBaseEnv, "v1/users", testUsername) {
 		t.Errorf("Unexpected request path. %s", req.URL.String())
 	}
 	b, err := ioutil.ReadAll(req.Body)
@@ -162,12 +153,7 @@ func TestGenerateUpdateUserRequest(t *testing.T) {
 
 func TestGenerateDeleteUserRequest(t *testing.T) {
 	// prepare
-	beforeEnv := os.Getenv("PIXELA_API_BASE")
-	afterEnv := "pixela.example.com"
-	os.Setenv("PIXELA_API_BASE", afterEnv)
-	beforeTokenEnv := os.Getenv("PIXELA_USER_TOKEN")
-	afterTokenEnv := "thisissecret"
-	os.Setenv("PIXELA_USER_TOKEN", afterTokenEnv)
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, afterTokenEnv := prepare()
 
 	testUsername := "c-know"
 	cmd := &deleteUserCommand{
@@ -178,8 +164,7 @@ func TestGenerateDeleteUserRequest(t *testing.T) {
 	req, err := generateDeleteUserRequest(cmd)
 
 	// cleanup
-	os.Setenv("PIXELA_API_BASE", beforeEnv)
-	os.Setenv("PIXELA_USER_TOKEN", beforeTokenEnv)
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
 
 	// assertion
 	if err != nil {
@@ -188,7 +173,7 @@ func TestGenerateDeleteUserRequest(t *testing.T) {
 	if req.Method != "DELETE" {
 		t.Errorf("Unexpected request method. %s", req.Method)
 	}
-	if req.URL.String() != fmt.Sprintf("https://%s/%s/%s", afterEnv, "v1/users", testUsername) {
+	if req.URL.String() != fmt.Sprintf("https://%s/%s/%s", afterAPIBaseEnv, "v1/users", testUsername) {
 		t.Errorf("Unexpected request path. %s", req.URL.String())
 	}
 	if req.Body != nil {
