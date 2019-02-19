@@ -336,3 +336,87 @@ func TestGenerateSVGUrlBothParamSpecified(t *testing.T) {
 		t.Errorf("Unexpected url. %s", url)
 	}
 }
+
+func TestGenerateUpdateGraphRequest(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testName := "test-name"
+	testUnit := "commits"
+	testColor := "ajisai"
+	testTimezone := "asia/Tokyo"
+	testSelfSufficient := "none"
+	testPurgeCacheURLs := []string{"http://test.example.com/"}
+	cmd := &updateGraphCommand{
+		Username:       testUsername,
+		ID:             testID,
+		Name:           testName,
+		Unit:           testUnit,
+		Color:          testColor,
+		Timezone:       testTimezone,
+		PurgeCacheURLs: testPurgeCacheURLs,
+		SelfSufficient: testSelfSufficient,
+	}
+
+	// run
+	req, err := generateUpdateGraphRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "PUT" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s", afterAPIBaseEnv, testUsername, testID) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"name":"%s","unit":"%s","color":"%s","timezone":"%s","purgeCacheURLs":["%s"],"selfSufficient":"%s"}`, testName, testUnit, testColor, testTimezone, testPurgeCacheURLs[0], testSelfSufficient) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateUpdateGraphRequestOver5URLsSpecified(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, _, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testName := "test-name"
+	testUnit := "commits"
+	testColor := "ajisai"
+	testTimezone := "asia/Tokyo"
+	testSelfSufficient := "none"
+	testPurgeCacheURLs := []string{"http://test.example.com/1", "http://test.example.com/2", "http://test.example.com/3", "http://test.example.com/4", "http://test.example.com/5", "http://test.example.com/6"}
+	cmd := &updateGraphCommand{
+		Username:       testUsername,
+		ID:             testID,
+		Name:           testName,
+		Unit:           testUnit,
+		Color:          testColor,
+		Timezone:       testTimezone,
+		PurgeCacheURLs: testPurgeCacheURLs,
+		SelfSufficient: testSelfSufficient,
+	}
+
+	// run
+	_, err := generateUpdateGraphRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err == nil {
+		t.Errorf("Error should have occurs.")
+	}
+}

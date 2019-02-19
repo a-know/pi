@@ -165,8 +165,18 @@ func generateSVGUrl(gS *graphSVGCommand) string {
 }
 
 func (uG *updateGraphCommand) Execute(args []string) error {
+	req, err := generateUpdateGraphRequest(uG)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 	if len(uG.PurgeCacheURLs) > 5 {
-		return fmt.Errorf("You can only specify up to five URLs for PurgeCacheURLs param.")
+		return nil, fmt.Errorf("You can only specify up to five URLs for PurgeCacheURLs param.")
 	}
 
 	paramStruct := &updateGraphParam{
@@ -184,11 +194,10 @@ func (uG *updateGraphCommand) Execute(args []string) error {
 		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate update api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate update api request : %s", err)
 	}
 
-	err = doRequest(req)
-	return err
+	return req, nil
 }
 
 func (gD *graphDetailCommand) Execute(args []string) error {
