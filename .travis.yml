@@ -2,8 +2,8 @@ language: go
 go:
 - 1.11.x
 script:
-- make test
 - make lint
+- make test
 env:
   global:
     PIXELA_API_BASE='pixela.example.com'

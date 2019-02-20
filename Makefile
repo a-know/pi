@@ -12,8 +12,11 @@ devel-deps: deps
 	  golang.org/x/lint/golint             \
 	  github.com/rakyll/gotest
 
-test: deps
+test: devel-deps
 	gotest -v -cover .
+
+citest: deps
+	$(GO) test
 
 lint: devel-deps
 	$(GO) vet
