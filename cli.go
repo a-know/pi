@@ -10,7 +10,6 @@ import (
 
 const (
 	exitCodeOK = iota
-	exitCodeParseFlagErr
 	exitCodeErr
 )
 
@@ -29,7 +28,7 @@ func (cli *CLI) Run(argv []string) int {
 			if ferr.Type == flags.ErrHelp {
 				return exitCodeOK
 			}
-			return exitCodeParseFlagErr
+			return exitCodeErr
 		}
 		return exitCodeErr
 	}

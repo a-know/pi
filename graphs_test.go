@@ -39,7 +39,7 @@ var graphTests = []struct {
 	{
 		name:     "create graph - not specify username",
 		input:    []string{"graphs", "create", "--id", "test-id", "--name", "test-name", "--type", "int", "--unit", "commits", "--color", "shibafu"},
-		exitCode: 2,
+		exitCode: 1,
 	},
 	{
 		name:     "create graph - color is invalid",
@@ -59,12 +59,12 @@ var graphTests = []struct {
 	{
 		name:     "get graph definition - not specify username",
 		input:    []string{"graphs", "get"},
-		exitCode: 2,
+		exitCode: 1,
 	},
 	{
 		name:     "get svg graph url - not specify username",
 		input:    []string{"graphs", "svg", "--id", "test-id"},
-		exitCode: 2,
+		exitCode: 1,
 	},
 	{
 		name:     "get svg graph url - not specify id",
@@ -84,7 +84,7 @@ var graphTests = []struct {
 	{
 		name:     "update graph - not specify username",
 		input:    []string{"graphs", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--id", "test-id", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b"},
-		exitCode: 2,
+		exitCode: 1,
 	},
 	{
 		name:     "update graph - invalid color name",
@@ -99,12 +99,12 @@ var graphTests = []struct {
 	{
 		name:     "update graph - purge cache urls limit over",
 		input:    []string{"graphs", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--username", "c-know", "--id", "test-id", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b", "--purge-cache-urls", "http://example.com/c", "--purge-cache-urls", "http://example.com/d", "--purge-cache-urls", "http://example.com/e", "--purge-cache-urls", "http://example.com/f"},
-		exitCode: 2,
+		exitCode: 1,
 	},
 	{
 		name:     "get graph detail url - not specify username",
 		input:    []string{"graphs", "detail", "--id", "test-id"},
-		exitCode: 2,
+		exitCode: 1,
 	},
 	{
 		name:     "get graph detail url - not specify id",
@@ -114,7 +114,7 @@ var graphTests = []struct {
 	{
 		name:     "delete graph - not specify username",
 		input:    []string{"graphs", "delete", "--id", "test-id"},
-		exitCode: 2,
+		exitCode: 1,
 	},
 	{
 		name:     "delete graph - not specify id",
@@ -124,7 +124,7 @@ var graphTests = []struct {
 	{
 		name:     "get graph pixels - not specify username",
 		input:    []string{"graphs", "pixels", "--id", "test-id"},
-		exitCode: 2,
+		exitCode: 1,
 	},
 	{
 		name:     "get graph pixels - not specify id",
