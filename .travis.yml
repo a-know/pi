@@ -3,7 +3,7 @@ go:
 - 1.11.x
 script:
 - make lint
-- make test
+- make citest
 env:
   global:
     PIXELA_API_BASE='pixela.example.com'
