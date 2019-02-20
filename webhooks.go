@@ -1,6 +1,9 @@
 package pi
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 type webhooksCommand struct {
 	Create createWebhookCommand `description:"create a Webhook" command:"create" subcommands-optional:"true"`
@@ -34,6 +37,16 @@ type deleteWebhookCommand struct {
 }
 
 func (cW *createWebhookCommand) Execute(args []string) error {
+	req, err := generateCreateWebhookRequest(cW)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generateCreateWebhookRequest(cW *createWebhookCommand) (*http.Request, error) {
 	paramStruct := &createWebhookParam{
 		ID:   cW.ID,
 		Type: cW.Type,
@@ -45,51 +58,77 @@ func (cW *createWebhookCommand) Execute(args []string) error {
 		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate create api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate create api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (gW *getWebhooksCommand) Execute(args []string) error {
+	req, err := generateGetWebhooksRequest(gW)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (gW *getWebhooksCommand) Execute(args []string) error {
+func generateGetWebhooksRequest(gW *getWebhooksCommand) (*http.Request, error) {
 	req, err := generateRequestWithToken(
 		"GET",
 		fmt.Sprintf("v1/users/%s/webhooks", gW.Username),
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate get api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate get api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (iW *invokeWebhookCommand) Execute(args []string) error {
+	req, err := generateInvokeWebhookRequest(iW)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (iW *invokeWebhookCommand) Execute(args []string) error {
+func generateInvokeWebhookRequest(iW *invokeWebhookCommand) (*http.Request, error) {
 	req, err := generateRequestWithToken(
 		"POST",
 		fmt.Sprintf("v1/users/%s/webhooks/%s", iW.Username, iW.WebhookHash),
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate invoke api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate invoke api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (dW *deleteWebhookCommand) Execute(args []string) error {
+	req, err := generateDeleteWebhookRequest(dW)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (dW *deleteWebhookCommand) Execute(args []string) error {
+func generateDeleteWebhookRequest(dW *deleteWebhookCommand) (*http.Request, error) {
 	req, err := generateRequestWithToken(
 		"DELETE",
 		fmt.Sprintf("v1/users/%s/webhooks/%s", dW.Username, dW.WebhookHash),
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate delete api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate delete api request : %s", err)
 	}
 
-	err = doRequest(req)
-	return err
+	return req, nil
 }
