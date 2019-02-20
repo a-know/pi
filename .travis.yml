@@ -1,0 +1,10 @@
+language: go
+go:
+- 1.11.x
+script:
+- make lint
+- make test
+env:
+  global:
+    PIXELA_API_BASE='pixela.example.com'
+    PIXELA_USER_TOKEN='thisissecret'
