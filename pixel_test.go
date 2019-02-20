@@ -18,17 +18,17 @@ var pixelTests = []struct {
 	},
 	{
 		name:     "post pixel - not specify date",
-		input:    []string{"pixel", "post", "--username", "c-know", "--id", "test-id", "--quantity", "1"},
+		input:    []string{"pixel", "post", "--username", "c-know", "--graph-id", "test-id", "--quantity", "1"},
 		exitCode: 1,
 	},
 	{
 		name:     "post pixel - not specify quantity",
-		input:    []string{"pixel", "post", "--username", "c-know", "--id", "test-id", "--date", "20190101"},
+		input:    []string{"pixel", "post", "--username", "c-know", "--graph-id", "test-id", "--date", "20190101"},
 		exitCode: 1,
 	},
 	{
 		name:     "post pixel - not specify username",
-		input:    []string{"pixel", "post", "--id", "test-id", "--date", "20190101", "--quantity", "1"},
+		input:    []string{"pixel", "post", "--graph-id", "test-id", "--date", "20190101", "--quantity", "1"},
 		exitCode: 1,
 	},
 	{
@@ -38,12 +38,12 @@ var pixelTests = []struct {
 	},
 	{
 		name:     "get pixel - not specify date",
-		input:    []string{"pixel", "get", "--username", "c-know", "--id", "test-id"},
+		input:    []string{"pixel", "get", "--username", "c-know", "--graph-id", "test-id"},
 		exitCode: 1,
 	},
 	{
 		name:     "get pixel - not specify username",
-		input:    []string{"pixel", "get", "--id", "test-id", "--date", "20190101"},
+		input:    []string{"pixel", "get", "--graph-id", "test-id", "--date", "20190101"},
 		exitCode: 1,
 	},
 	{
@@ -53,17 +53,17 @@ var pixelTests = []struct {
 	},
 	{
 		name:     "update pixel - not specify date",
-		input:    []string{"pixel", "update", "--username", "c-know", "--id", "test-id", "--quantity", "1"},
+		input:    []string{"pixel", "update", "--username", "c-know", "--graph-id", "test-id", "--quantity", "1"},
 		exitCode: 1,
 	},
 	{
 		name:     "update pixel - not specify quantity",
-		input:    []string{"pixel", "update", "--username", "c-know", "--id", "test-id", "--date", "20190101"},
+		input:    []string{"pixel", "update", "--username", "c-know", "--graph-id", "test-id", "--date", "20190101"},
 		exitCode: 1,
 	},
 	{
 		name:     "update pixel - not specify username",
-		input:    []string{"pixel", "update", "--id", "test-id", "--date", "20190101", "--quantity", "1"},
+		input:    []string{"pixel", "update", "--graph-id", "test-id", "--date", "20190101", "--quantity", "1"},
 		exitCode: 1,
 	},
 	{
@@ -73,7 +73,7 @@ var pixelTests = []struct {
 	},
 	{
 		name:     "increment pixel - not specify username",
-		input:    []string{"pixel", "increment", "--id", "test-id"},
+		input:    []string{"pixel", "increment", "--graph-id", "test-id"},
 		exitCode: 1,
 	},
 	{
@@ -83,7 +83,7 @@ var pixelTests = []struct {
 	},
 	{
 		name:     "decrement pixel - not specify username",
-		input:    []string{"pixel", "decrement", "--id", "test-id"},
+		input:    []string{"pixel", "decrement", "--graph-id", "test-id"},
 		exitCode: 1,
 	},
 	{
@@ -93,12 +93,12 @@ var pixelTests = []struct {
 	},
 	{
 		name:     "delete pixel - not specify date",
-		input:    []string{"pixel", "delete", "--username", "c-know", "--id", "test-id"},
+		input:    []string{"pixel", "delete", "--username", "c-know", "--graph-id", "test-id"},
 		exitCode: 1,
 	},
 	{
 		name:     "delete pixel - not specify username",
-		input:    []string{"pixel", "delete", "--id", "test-id", "--date", "20190101"},
+		input:    []string{"pixel", "delete", "--graph-id", "test-id", "--date", "20190101"},
 		exitCode: 1,
 	},
 }

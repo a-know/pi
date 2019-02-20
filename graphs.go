@@ -18,7 +18,7 @@ type graphsCommand struct {
 
 type createGraphCommand struct {
 	Username       string `long:"username" description:"User name of graph owner."`
-	ID             string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	ID             string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 	Name           string `long:"name" description:"The name of the pixelation graph." required:"true"`
 	Unit           string `long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory." required:"true"`
 	Type           string `long:"type" description:"The type of quantity to be handled in the graph. Only int or float are supported." choice:"int" choice:"float" required:"true"`
@@ -43,14 +43,14 @@ type getGraphParam struct{}
 
 type graphSVGCommand struct {
 	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 	Date     string `long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
 	Mode     string `long:"mode" description:"Specify the graph display mode." choice:"short"`
 }
 
 type updateGraphCommand struct {
 	Username       string   `long:"username" description:"User name of graph owner."`
-	ID             string   `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	ID             string   `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 	Name           string   `long:"name" description:"The name of the pixelation graph."`
 	Unit           string   `long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory."`
 	Color          string   `long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro"`
@@ -69,17 +69,17 @@ type updateGraphParam struct {
 
 type graphDetailCommand struct {
 	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type deleteGraphCommand struct {
 	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type getGraphPixelsCommand struct {
 	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 	From     string `long:"from" description:"Specify the start position of the period."`
 	To       string `long:"to" description:"Specify the end position of the period."`
 }

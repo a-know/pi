@@ -14,7 +14,7 @@ type webhooksCommand struct {
 
 type createWebhookCommand struct {
 	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
+	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 	Type     string `long:"type" description:"Specify the behavior when this Webhook is invoked." choice:"increment" choice:"decrement" required:"true"`
 }
 type createWebhookParam struct {

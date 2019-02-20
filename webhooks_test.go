@@ -18,17 +18,17 @@ var webhookTests = []struct {
 	},
 	{
 		name:     "create webhook - not specify type",
-		input:    []string{"webhooks", "create", "--id", "test-id", "--username", "c-know"},
+		input:    []string{"webhooks", "create", "--graph-id", "test-id", "--username", "c-know"},
 		exitCode: 1,
 	},
 	{
 		name:     "create webhook - not specify username",
-		input:    []string{"webhooks", "create", "--id", "test-id", "--type", "increment"},
+		input:    []string{"webhooks", "create", "--graph-id", "test-id", "--type", "increment"},
 		exitCode: 1,
 	},
 	{
 		name:     "create webhook - invalid type",
-		input:    []string{"webhooks", "create", "--id", "test-id", "--type", "none", "--username", "c-know"},
+		input:    []string{"webhooks", "create", "--graph-id", "test-id", "--type", "none", "--username", "c-know"},
 		exitCode: 1,
 	},
 	{
