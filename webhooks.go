@@ -13,9 +13,9 @@ type webhooksCommand struct {
 }
 
 type createWebhookCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Type     string `long:"type" description:"Specify the behavior when this Webhook is invoked." choice:"increment" choice:"decrement" required:"true"`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Type     string `short:"t" long:"type" description:"Specify the behavior when this Webhook is invoked." choice:"increment" choice:"decrement" required:"true"`
 }
 type createWebhookParam struct {
 	ID   string `json:"graphID"`
@@ -23,17 +23,17 @@ type createWebhookParam struct {
 }
 
 type getWebhooksCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
 }
 
 type invokeWebhookCommand struct {
-	Username    string `long:"username" description:"User name of graph owner."`
-	WebhookHash string `long:"webhookHash" description:"Specify webhookHash of registered webhook." required:"true"`
+	Username    string `short:"u" long:"username" description:"User name of graph owner."`
+	WebhookHash string `short:"w" long:"webhookHash" description:"Specify webhookHash of registered webhook." required:"true"`
 }
 
 type deleteWebhookCommand struct {
-	Username    string `long:"username" description:"User name of graph owner."`
-	WebhookHash string `long:"webhookHash" description:"Specify webhookHash of registered webhook." required:"true"`
+	Username    string `short:"u" long:"username" description:"User name of graph owner."`
+	WebhookHash string `short:"w" long:"webhookHash" description:"Specify webhookHash of registered webhook." required:"true"`
 }
 
 func (cW *createWebhookCommand) Execute(args []string) error {

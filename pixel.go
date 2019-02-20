@@ -15,11 +15,11 @@ type pixelCommand struct {
 }
 
 type postPixelCommand struct {
-	Username     string `long:"username" description:"User name of graph owner."`
-	ID           string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Date         string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
-	Quantity     string `long:"quantity" description:"Specify the quantity to be registered on the specified date." required:"true"`
-	OptionalData string `long:"optional-data" description:"Additional information other than quantity. It is specified as JSON string."`
+	Username     string `short:"u" long:"username" description:"User name of graph owner."`
+	ID           string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date         string `short:"d" long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
+	Quantity     string `short:"q" long:"quantity" description:"Specify the quantity to be registered on the specified date." required:"true"`
+	OptionalData string `short:"o" long:"optional-data" description:"Additional information other than quantity. It is specified as JSON string."`
 }
 type postPixelParam struct {
 	Date         string `json:"date"`
@@ -28,17 +28,17 @@ type postPixelParam struct {
 }
 
 type getPixelCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Date     string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date     string `short:"d" long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
 }
 
 type updatePixelCommand struct {
-	Username     string `long:"username" description:"User name of graph owner."`
-	ID           string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Date         string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
-	Quantity     string `long:"quantity" description:"Specify the quantity to be registered on the specified date." required:"true"`
-	OptionalData string `long:"optional-data" description:"Additional information other than quantity. It is specified as JSON string."`
+	Username     string `short:"u" long:"username" description:"User name of graph owner."`
+	ID           string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date         string `short:"d" long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
+	Quantity     string `short:"q" long:"quantity" description:"Specify the quantity to be registered on the specified date." required:"true"`
+	OptionalData string `short:"o" long:"optional-data" description:"Additional information other than quantity. It is specified as JSON string."`
 }
 type updatePixelParam struct {
 	Quantity     string `json:"quantity"`
@@ -46,19 +46,19 @@ type updatePixelParam struct {
 }
 
 type incrementPixelCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type decrementPixelCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type deletePixelCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Date     string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date     string `short:"d" long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
 }
 
 func (pP *postPixelCommand) Execute(args []string) error {

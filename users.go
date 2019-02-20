@@ -12,10 +12,10 @@ type usersCommand struct {
 }
 
 type createUserCommand struct {
-	Token               string `long:"token" description:"A token string used to authenticate as a user to be created." required:"true"`
-	Username            string `long:"username" description:"User name to be created." required:"true"`
-	AgreeTermsOfService string `long:"agree-terms-of-service" description:"Specify yes or no whether you agree to the terms of service." choice:"yes" choice:"no" required:"true"`
-	NotMinor            string `long:"not-minor" description:"Specify yes or no as to whether you are not a minor or if you are a minor and you have the parental consent of using pixela." choice:"yes" choice:"no" required:"true"`
+	Token               string `short:"t" long:"token" description:"A token string used to authenticate as a user to be created." required:"true"`
+	Username            string `short:"u" long:"username" description:"User name to be created." required:"true"`
+	AgreeTermsOfService string `short:"a" long:"agree-terms-of-service" description:"Specify yes or no whether you agree to the terms of service." choice:"yes" choice:"no" required:"true"`
+	NotMinor            string `short:"m" long:"not-minor" description:"Specify yes or no as to whether you are not a minor or if you are a minor and you have the parental consent of using pixela." choice:"yes" choice:"no" required:"true"`
 }
 
 type createUserParams struct {
@@ -26,8 +26,8 @@ type createUserParams struct {
 }
 
 type updateUserCommand struct {
-	Username string `long:"username" description:"User name to be updated."`
-	NewToken string `long:"new-token" description:"A new authentication token for update." required:"true"`
+	Username string `short:"u" long:"username" description:"User name to be updated."`
+	NewToken string `short:"t" long:"new-token" description:"A new authentication token for update." required:"true"`
 }
 
 type updateUserParams struct {
@@ -35,7 +35,7 @@ type updateUserParams struct {
 }
 
 type deleteUserCommand struct {
-	Username string `long:"username" description:"User name to be deleted."`
+	Username string `short:"u" long:"username" description:"User name to be deleted."`
 }
 
 func (cC *createUserCommand) Execute(args []string) error {

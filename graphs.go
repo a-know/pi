@@ -17,14 +17,14 @@ type graphsCommand struct {
 }
 
 type createGraphCommand struct {
-	Username       string `long:"username" description:"User name of graph owner."`
-	ID             string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Name           string `long:"name" description:"The name of the pixelation graph." required:"true"`
-	Unit           string `long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory." required:"true"`
-	Type           string `long:"type" description:"The type of quantity to be handled in the graph. Only int or float are supported." choice:"int" choice:"float" required:"true"`
-	Color          string `long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro" required:"true"`
-	Timezone       string `long:"timezone" description:"The timezone for handling this graph"`
-	SelfSufficient string `long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
+	Username       string `short:"u" long:"username" description:"User name of graph owner."`
+	ID             string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Name           string `short:"n" long:"name" description:"The name of the pixelation graph." required:"true"`
+	Unit           string `short:"u" long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory." required:"true"`
+	Type           string `short:"t" long:"type" description:"The type of quantity to be handled in the graph. Only int or float are supported." choice:"int" choice:"float" required:"true"`
+	Color          string `short:"c" long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro" required:"true"`
+	Timezone       string `short:"z" long:"timezone" description:"The timezone for handling this graph"`
+	SelfSufficient string `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
 }
 type createGraphParam struct {
 	ID             string `json:"id"`
@@ -37,26 +37,26 @@ type createGraphParam struct {
 }
 
 type getGraphsCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
 }
 type getGraphParam struct{}
 
 type graphSVGCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Date     string `long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
-	Mode     string `long:"mode" description:"Specify the graph display mode." choice:"short"`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date     string `short:"d" long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
+	Mode     string `short:"m" long:"mode" description:"Specify the graph display mode." choice:"short"`
 }
 
 type updateGraphCommand struct {
-	Username       string   `long:"username" description:"User name of graph owner."`
-	ID             string   `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Name           string   `long:"name" description:"The name of the pixelation graph."`
-	Unit           string   `long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory."`
-	Color          string   `long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro"`
-	Timezone       string   `long:"timezone" description:"The timezone for handling this graph"`
-	PurgeCacheURLs []string `long:"purge-cache-urls" description:"he URL to send the purge request to purge the cache when the graph is updated."`
-	SelfSufficient string   `long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
+	Username       string   `short:"u" long:"username" description:"User name of graph owner."`
+	ID             string   `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Name           string   `short:"n" long:"name" description:"The name of the pixelation graph."`
+	Unit           string   `short:"i" long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory."`
+	Color          string   `short:"c" long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro"`
+	Timezone       string   `short:"z" long:"timezone" description:"The timezone for handling this graph"`
+	PurgeCacheURLs []string `short:"p" long:"purge-cache-urls" description:"The URL to send the purge request to purge the cache when the graph is updated. Multiple params can be specified."`
+	SelfSufficient string   `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
 }
 type updateGraphParam struct {
 	Name           string   `json:"name"`
@@ -68,20 +68,20 @@ type updateGraphParam struct {
 }
 
 type graphDetailCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type deleteGraphCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type getGraphPixelsCommand struct {
-	Username string `long:"username" description:"User name of graph owner."`
-	ID       string `long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	From     string `long:"from" description:"Specify the start position of the period."`
-	To       string `long:"to" description:"Specify the end position of the period."`
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	From     string `short:"f" long:"from" description:"Specify the start position of the period."`
+	To       string `short:"t" long:"to" description:"Specify the end position of the period."`
 }
 
 func (cG *createGraphCommand) Execute(args []string) error {
