@@ -210,20 +210,38 @@ func (gD *graphDetailCommand) Execute(args []string) error {
 }
 
 func (dG *deleteGraphCommand) Execute(args []string) error {
-	req, err := generateRequestWithToken(
-		"DELETE",
-		fmt.Sprintf("v1/users/%s/graphs/%s", dG.Username, dG.ID),
-		nil,
-	)
+	req, err := generateDeleteGraphRequest(dG)
 	if err != nil {
-		return fmt.Errorf("Failed to generate delete api request : %s", err)
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
+func generateDeleteGraphRequest(dG *deleteGraphCommand) (*http.Request, error) {
+	req, err := generateRequestWithToken(
+		"DELETE",
+		fmt.Sprintf("v1/users/%s/graphs/%s", dG.Username, dG.ID),
+		nil,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate delete api request : %s", err)
+	}
+	return req, nil
+}
+
 func (gGP *getGraphPixelsCommand) Execute(args []string) error {
+	req, err := generateGetGraphPixelsRequest(gGP)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generateGetGraphPixelsRequest(gGP *getGraphPixelsCommand) (*http.Request, error) {
 	url := fmt.Sprintf("v1/users/%s/graphs/%s/pixels", gGP.Username, gGP.ID)
 
 	if gGP.From != "" {
@@ -241,9 +259,8 @@ func (gGP *getGraphPixelsCommand) Execute(args []string) error {
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate get api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate get api request : %s", err)
 	}
 
-	err = doRequest(req)
-	return err
+	return req, nil
 }

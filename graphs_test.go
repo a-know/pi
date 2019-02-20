@@ -420,3 +420,198 @@ func TestGenerateUpdateGraphRequestOver5URLsSpecified(t *testing.T) {
 		t.Errorf("Error should have occurs.")
 	}
 }
+
+func TestGenerateDeleteGraphRequest(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	cmd := &deleteGraphCommand{
+		Username: testUsername,
+		ID:       testID,
+	}
+
+	// run
+	req, err := generateDeleteGraphRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "DELETE" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s", afterAPIBaseEnv, testUsername, testID) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		defer req.Body.Close()
+		if err != nil {
+			t.Errorf("Failed to read request body. %s", err)
+		}
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateGetGraphPixelsRequest(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	cmd := &getGraphPixelsCommand{
+		Username: testUsername,
+		ID:       testID,
+	}
+
+	// run
+	req, err := generateGetGraphPixelsRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "GET" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s/pixels", afterAPIBaseEnv, testUsername, testID) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		defer req.Body.Close()
+		if err != nil {
+			t.Errorf("Failed to read request body. %s", err)
+		}
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateGetGraphPixelsRequestFromParamSpecified(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testFrom := "20190101"
+	cmd := &getGraphPixelsCommand{
+		Username: testUsername,
+		ID:       testID,
+		From:     testFrom,
+	}
+
+	// run
+	req, err := generateGetGraphPixelsRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "GET" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s/pixels?from=%s", afterAPIBaseEnv, testUsername, testID, testFrom) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		defer req.Body.Close()
+		if err != nil {
+			t.Errorf("Failed to read request body. %s", err)
+		}
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateGetGraphPixelsRequestToParamSpecified(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testFrom := ""
+	testTo := "20191231"
+	cmd := &getGraphPixelsCommand{
+		Username: testUsername,
+		ID:       testID,
+		From:     testFrom,
+		To:       testTo,
+	}
+
+	// run
+	req, err := generateGetGraphPixelsRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "GET" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s/pixels?to=%s", afterAPIBaseEnv, testUsername, testID, testTo) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		defer req.Body.Close()
+		if err != nil {
+			t.Errorf("Failed to read request body. %s", err)
+		}
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateGetGraphPixelsRequestBothParamSpecified(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testFrom := "20190101"
+	testTo := "20191231"
+	cmd := &getGraphPixelsCommand{
+		Username: testUsername,
+		ID:       testID,
+		From:     testFrom,
+		To:       testTo,
+	}
+
+	// run
+	req, err := generateGetGraphPixelsRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "GET" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s/pixels?from=%s&to=%s", afterAPIBaseEnv, testUsername, testID, testFrom, testTo) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		defer req.Body.Close()
+		if err != nil {
+			t.Errorf("Failed to read request body. %s", err)
+		}
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
