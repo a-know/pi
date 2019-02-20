@@ -5,7 +5,7 @@ endif
 GO ?= GO111MODULE=on go
 
 deps:
-	env GO111MODULE=on go mod download
+	env GO111MODULE=on $(GO) mod download
 
 devel-deps: deps
 	$(GO) get ${u} \
