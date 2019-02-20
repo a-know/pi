@@ -1,6 +1,9 @@
 package pi
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 type pixelCommand struct {
 	Post      postPixelCommand      `description:"post a Pixel" command:"post" subcommands-optional:"true"`
@@ -59,6 +62,16 @@ type deletePixelCommand struct {
 }
 
 func (pP *postPixelCommand) Execute(args []string) error {
+	req, err := generatePostPixelRequest(pP)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generatePostPixelRequest(pP *postPixelCommand) (*http.Request, error) {
 	paramStruct := &postPixelParam{
 		Date:         pP.Date,
 		Quantity:     pP.Quantity,
@@ -71,28 +84,46 @@ func (pP *postPixelCommand) Execute(args []string) error {
 		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate create api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate create api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (gP *getPixelCommand) Execute(args []string) error {
+	req, err := generateGetPixelRequest(gP)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (gP *getPixelCommand) Execute(args []string) error {
+func generateGetPixelRequest(gP *getPixelCommand) (*http.Request, error) {
 	req, err := generateRequestWithToken(
 		"GET",
 		fmt.Sprintf("v1/users/%s/graphs/%s/%s", gP.Username, gP.ID, gP.Date),
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate get api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate get api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (uP *updatePixelCommand) Execute(args []string) error {
+	req, err := generateUpdatePixelRequest(uP)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (uP *updatePixelCommand) Execute(args []string) error {
+func generateUpdatePixelRequest(uP *updatePixelCommand) (*http.Request, error) {
 	paramStruct := &updatePixelParam{
 		Quantity:     uP.Quantity,
 		OptionalData: uP.OptionalData,
@@ -104,51 +135,77 @@ func (uP *updatePixelCommand) Execute(args []string) error {
 		paramStruct,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate update api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate update api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (iP *incrementPixelCommand) Execute(args []string) error {
+	req, err := generateIncrementPixelRequest(iP)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (iP *incrementPixelCommand) Execute(args []string) error {
+func generateIncrementPixelRequest(iP *incrementPixelCommand) (*http.Request, error) {
 	req, err := generateRequestWithToken(
 		"PUT",
 		fmt.Sprintf("v1/users/%s/graphs/%s/increment", iP.Username, iP.ID),
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate increment api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate increment api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (dP *decrementPixelCommand) Execute(args []string) error {
+	req, err := generateDecrementPixelRequest(dP)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (dP *decrementPixelCommand) Execute(args []string) error {
+func generateDecrementPixelRequest(dP *decrementPixelCommand) (*http.Request, error) {
 	req, err := generateRequestWithToken(
 		"PUT",
 		fmt.Sprintf("v1/users/%s/graphs/%s/decrement", dP.Username, dP.ID),
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate decrement api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate decrement api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (dP *deletePixelCommand) Execute(args []string) error {
+	req, err := generateDeletePixelRequest(dP)
+	if err != nil {
+		return err
 	}
 
 	err = doRequest(req)
 	return err
 }
 
-func (dP *deletePixelCommand) Execute(args []string) error {
+func generateDeletePixelRequest(dP *deletePixelCommand) (*http.Request, error) {
 	req, err := generateRequestWithToken(
 		"DELETE",
 		fmt.Sprintf("v1/users/%s/graphs/%s/%s", dP.Username, dP.ID, dP.Date),
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("Failed to generate delete api request : %s", err)
+		return nil, fmt.Errorf("Failed to generate delete api request : %s", err)
 	}
 
-	err = doRequest(req)
-	return err
+	return req, nil
 }

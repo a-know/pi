@@ -176,7 +176,7 @@ func (uG *updateGraphCommand) Execute(args []string) error {
 
 func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 	if len(uG.PurgeCacheURLs) > 5 {
-		return nil, fmt.Errorf("You can only specify up to five URLs for PurgeCacheURLs param.")
+		return nil, fmt.Errorf("you can only specify up to five URLs for PurgeCacheURLs param")
 	}
 
 	paramStruct := &updateGraphParam{

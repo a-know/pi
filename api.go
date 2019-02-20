@@ -45,7 +45,7 @@ func generateRequestWithToken(method string, path string, paramStruct interface{
 
 	token := os.Getenv("PIXELA_USER_TOKEN")
 	if token == "" {
-		return nil, fmt.Errorf("Token is not set. Please specify your token by PIXELA_USER_TOKEN environment variable.")
+		return nil, fmt.Errorf("token is not set. please specify your token by PIXELA_USER_TOKEN environment variable")
 	}
 
 	req.Header.Set("X-USER-TOKEN", token)
