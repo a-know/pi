@@ -15,7 +15,7 @@ type pixelCommand struct {
 }
 
 type postPixelCommand struct {
-	Username     string `long:"username" description:"User name of graph owner." required:"true"`
+	Username     string `long:"username" description:"User name of graph owner."`
 	ID           string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Date         string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
 	Quantity     string `long:"quantity" description:"Specify the quantity to be registered on the specified date." required:"true"`
@@ -28,13 +28,13 @@ type postPixelParam struct {
 }
 
 type getPixelCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Date     string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
 }
 
 type updatePixelCommand struct {
-	Username     string `long:"username" description:"User name of graph owner." required:"true"`
+	Username     string `long:"username" description:"User name of graph owner."`
 	ID           string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Date         string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
 	Quantity     string `long:"quantity" description:"Specify the quantity to be registered on the specified date." required:"true"`
@@ -46,17 +46,17 @@ type updatePixelParam struct {
 }
 
 type incrementPixelCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type decrementPixelCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type deletePixelCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Date     string `long:"date" description:"The date on which the quantity is to be recorded. It is specified in yyyyMMdd format." required:"true"`
 }
@@ -72,6 +72,11 @@ func (pP *postPixelCommand) Execute(args []string) error {
 }
 
 func generatePostPixelRequest(pP *postPixelCommand) (*http.Request, error) {
+	username, err := getUsername(pP.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	paramStruct := &postPixelParam{
 		Date:         pP.Date,
 		Quantity:     pP.Quantity,
@@ -80,7 +85,7 @@ func generatePostPixelRequest(pP *postPixelCommand) (*http.Request, error) {
 
 	req, err := generateRequestWithToken(
 		"POST",
-		fmt.Sprintf("v1/users/%s/graphs/%s", pP.Username, pP.ID),
+		fmt.Sprintf("v1/users/%s/graphs/%s", username, pP.ID),
 		paramStruct,
 	)
 	if err != nil {
@@ -101,9 +106,14 @@ func (gP *getPixelCommand) Execute(args []string) error {
 }
 
 func generateGetPixelRequest(gP *getPixelCommand) (*http.Request, error) {
+	username, err := getUsername(gP.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"GET",
-		fmt.Sprintf("v1/users/%s/graphs/%s/%s", gP.Username, gP.ID, gP.Date),
+		fmt.Sprintf("v1/users/%s/graphs/%s/%s", username, gP.ID, gP.Date),
 		nil,
 	)
 	if err != nil {
@@ -124,6 +134,11 @@ func (uP *updatePixelCommand) Execute(args []string) error {
 }
 
 func generateUpdatePixelRequest(uP *updatePixelCommand) (*http.Request, error) {
+	username, err := getUsername(uP.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	paramStruct := &updatePixelParam{
 		Quantity:     uP.Quantity,
 		OptionalData: uP.OptionalData,
@@ -131,7 +146,7 @@ func generateUpdatePixelRequest(uP *updatePixelCommand) (*http.Request, error) {
 
 	req, err := generateRequestWithToken(
 		"PUT",
-		fmt.Sprintf("v1/users/%s/graphs/%s/%s", uP.Username, uP.ID, uP.Date),
+		fmt.Sprintf("v1/users/%s/graphs/%s/%s", username, uP.ID, uP.Date),
 		paramStruct,
 	)
 	if err != nil {
@@ -152,9 +167,14 @@ func (iP *incrementPixelCommand) Execute(args []string) error {
 }
 
 func generateIncrementPixelRequest(iP *incrementPixelCommand) (*http.Request, error) {
+	username, err := getUsername(iP.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"PUT",
-		fmt.Sprintf("v1/users/%s/graphs/%s/increment", iP.Username, iP.ID),
+		fmt.Sprintf("v1/users/%s/graphs/%s/increment", username, iP.ID),
 		nil,
 	)
 	if err != nil {
@@ -175,9 +195,14 @@ func (dP *decrementPixelCommand) Execute(args []string) error {
 }
 
 func generateDecrementPixelRequest(dP *decrementPixelCommand) (*http.Request, error) {
+	username, err := getUsername(dP.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"PUT",
-		fmt.Sprintf("v1/users/%s/graphs/%s/decrement", dP.Username, dP.ID),
+		fmt.Sprintf("v1/users/%s/graphs/%s/decrement", username, dP.ID),
 		nil,
 	)
 	if err != nil {
@@ -198,9 +223,14 @@ func (dP *deletePixelCommand) Execute(args []string) error {
 }
 
 func generateDeletePixelRequest(dP *deletePixelCommand) (*http.Request, error) {
+	username, err := getUsername(dP.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"DELETE",
-		fmt.Sprintf("v1/users/%s/graphs/%s/%s", dP.Username, dP.ID, dP.Date),
+		fmt.Sprintf("v1/users/%s/graphs/%s/%s", username, dP.ID, dP.Date),
 		nil,
 	)
 	if err != nil {

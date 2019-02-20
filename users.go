@@ -26,7 +26,7 @@ type createUserParams struct {
 }
 
 type updateUserCommand struct {
-	Username string `long:"username" description:"User name to be updated." required:"true"`
+	Username string `long:"username" description:"User name to be updated."`
 	NewToken string `long:"new-token" description:"A new authentication token for update." required:"true"`
 }
 
@@ -35,13 +35,8 @@ type updateUserParams struct {
 }
 
 type deleteUserCommand struct {
-	Username string `long:"username" description:"User name to be deleted." required:"true"`
+	Username string `long:"username" description:"User name to be deleted."`
 }
-
-// func (b *userCommand) Execute(args []string) error {
-// 	fmt.Println("pi user running.")
-// 	return nil
-// }
 
 func (cC *createUserCommand) Execute(args []string) error {
 
@@ -84,13 +79,18 @@ func (uC *updateUserCommand) Execute(args []string) error {
 }
 
 func generateUpdateUserRequest(uC *updateUserCommand) (*http.Request, error) {
+	username, err := getUsername(uC.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	paramStruct := &updateUserParams{
 		NewToken: uC.NewToken,
 	}
 
 	req, err := generateRequestWithToken(
 		"PUT",
-		fmt.Sprintf("v1/users/%s", uC.Username),
+		fmt.Sprintf("v1/users/%s", username),
 		paramStruct,
 	)
 	if err != nil {
@@ -110,9 +110,14 @@ func (dC *deleteUserCommand) Execute(args []string) error {
 }
 
 func generateDeleteUserRequest(dC *deleteUserCommand) (*http.Request, error) {
+	username, err := getUsername(dC.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"DELETE",
-		fmt.Sprintf("v1/users/%s", dC.Username),
+		fmt.Sprintf("v1/users/%s", username),
 		nil,
 	)
 	if err != nil {

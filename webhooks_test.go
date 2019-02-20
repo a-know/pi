@@ -24,7 +24,7 @@ var webhookTests = []struct {
 	{
 		name:     "create webhook - not specify username",
 		input:    []string{"webhooks", "create", "--id", "test-id", "--type", "increment"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
 		name:     "create webhook - invalid type",
@@ -34,12 +34,12 @@ var webhookTests = []struct {
 	{
 		name:     "get webhooks - not specify username",
 		input:    []string{"webhooks", "get"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
 		name:     "invoke webhook - not specify username",
 		input:    []string{"webhooks", "invoke", "--webhookHash", "hash"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
 		name:     "invoke webhook - not specify WebhookHash",
@@ -49,7 +49,7 @@ var webhookTests = []struct {
 	{
 		name:     "delete webhook - not specify username",
 		input:    []string{"webhooks", "delete", "--webhookHash", "hash"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
 		name:     "delete webhook - not specify WebhookHash",

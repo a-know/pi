@@ -39,7 +39,7 @@ var graphTests = []struct {
 	{
 		name:     "create graph - not specify username",
 		input:    []string{"graphs", "create", "--id", "test-id", "--name", "test-name", "--type", "int", "--unit", "commits", "--color", "shibafu"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
 		name:     "create graph - color is invalid",
@@ -57,17 +57,17 @@ var graphTests = []struct {
 		exitCode: 1,
 	},
 	{
-		name:     "get graph definition - not psecify username",
+		name:     "get graph definition - not specify username",
 		input:    []string{"graphs", "get"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
-		name:     "get svg graph url - not psecify username",
+		name:     "get svg graph url - not specify username",
 		input:    []string{"graphs", "svg", "--id", "test-id"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
-		name:     "get svg graph url - not psecify id",
+		name:     "get svg graph url - not specify id",
 		input:    []string{"graphs", "svg", "--username", "c-know"},
 		exitCode: 1,
 	},
@@ -84,7 +84,7 @@ var graphTests = []struct {
 	{
 		name:     "update graph - not specify username",
 		input:    []string{"graphs", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--id", "test-id", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
 		name:     "update graph - invalid color name",
@@ -102,32 +102,32 @@ var graphTests = []struct {
 		exitCode: 2,
 	},
 	{
-		name:     "get graph detail url - not psecify username",
+		name:     "get graph detail url - not specify username",
 		input:    []string{"graphs", "detail", "--id", "test-id"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
-		name:     "get graph detail url - not psecify id",
+		name:     "get graph detail url - not specify id",
 		input:    []string{"graphs", "detail", "--username", "c-know"},
 		exitCode: 1,
 	},
 	{
-		name:     "delete graph - not psecify username",
+		name:     "delete graph - not specify username",
 		input:    []string{"graphs", "delete", "--id", "test-id"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
-		name:     "delete graph - not psecify id",
+		name:     "delete graph - not specify id",
 		input:    []string{"graphs", "delete", "--username", "c-know"},
 		exitCode: 1,
 	},
 	{
-		name:     "get graph pixels - not psecify username",
+		name:     "get graph pixels - not specify username",
 		input:    []string{"graphs", "pixels", "--id", "test-id"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
-		name:     "get graph pixels - not psecify id",
+		name:     "get graph pixels - not specify id",
 		input:    []string{"graphs", "pixels", "--username", "c-know"},
 		exitCode: 1,
 	},
@@ -245,12 +245,15 @@ func TestGenerateSVGUrlNoParam(t *testing.T) {
 	}
 
 	// run
-	url := generateSVGUrl(cmd)
+	url, err := generateSVGUrl(cmd)
 
 	// cleanup
 	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
 
 	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
 	if url != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s", afterAPIBaseEnv, testUsername, testID) {
 		t.Errorf("Unexpected url. %s", url)
 	}
@@ -272,12 +275,15 @@ func TestGenerateSVGUrlDateSpecified(t *testing.T) {
 	}
 
 	// run
-	url := generateSVGUrl(cmd)
+	url, err := generateSVGUrl(cmd)
 
 	// cleanup
 	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
 
 	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
 	if url != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s?date=%s", afterAPIBaseEnv, testUsername, testID, testDate) {
 		t.Errorf("Unexpected url. %s", url)
 	}
@@ -299,12 +305,15 @@ func TestGenerateSVGUrlModeSpecified(t *testing.T) {
 	}
 
 	// run
-	url := generateSVGUrl(cmd)
+	url, err := generateSVGUrl(cmd)
 
 	// cleanup
 	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
 
 	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
 	if url != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s?mode=%s", afterAPIBaseEnv, testUsername, testID, testMode) {
 		t.Errorf("Unexpected url. %s", url)
 	}
@@ -326,12 +335,15 @@ func TestGenerateSVGUrlBothParamSpecified(t *testing.T) {
 	}
 
 	// run
-	url := generateSVGUrl(cmd)
+	url, err := generateSVGUrl(cmd)
 
 	// cleanup
 	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
 
 	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
 	if url != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s?date=%s&mode=%s", afterAPIBaseEnv, testUsername, testID, testDate, testMode) {
 		t.Errorf("Unexpected url. %s", url)
 	}

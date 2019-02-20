@@ -42,19 +42,19 @@ var userTests = []struct {
 		exitCode: 1,
 	},
 	{
-		name:     "update user - not psecify username",
+		name:     "update user - not specify username",
 		input:    []string{"users", "update", "--new-token", "thisissecret"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 	{
-		name:     "update user - not psecify new-token",
+		name:     "update user - not specify new-token",
 		input:    []string{"users", "update", "--username", "c-know"},
 		exitCode: 1,
 	},
 	{
-		name:     "delete user - not psecify username",
+		name:     "delete user - not specify username",
 		input:    []string{"users", "delete"},
-		exitCode: 1,
+		exitCode: 2,
 	},
 }
 

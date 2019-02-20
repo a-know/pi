@@ -13,7 +13,7 @@ type webhooksCommand struct {
 }
 
 type createWebhookCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Type     string `long:"type" description:"Specify the behavior when this Webhook is invoked." choice:"increment" choice:"decrement" required:"true"`
 }
@@ -23,16 +23,16 @@ type createWebhookParam struct {
 }
 
 type getWebhooksCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 }
 
 type invokeWebhookCommand struct {
-	Username    string `long:"username" description:"User name of graph owner." required:"true"`
+	Username    string `long:"username" description:"User name of graph owner."`
 	WebhookHash string `long:"webhookHash" description:"Specify webhookHash of registered webhook." required:"true"`
 }
 
 type deleteWebhookCommand struct {
-	Username    string `long:"username" description:"User name of graph owner." required:"true"`
+	Username    string `long:"username" description:"User name of graph owner."`
 	WebhookHash string `long:"webhookHash" description:"Specify webhookHash of registered webhook." required:"true"`
 }
 
@@ -47,6 +47,11 @@ func (cW *createWebhookCommand) Execute(args []string) error {
 }
 
 func generateCreateWebhookRequest(cW *createWebhookCommand) (*http.Request, error) {
+	username, err := getUsername(cW.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	paramStruct := &createWebhookParam{
 		ID:   cW.ID,
 		Type: cW.Type,
@@ -54,7 +59,7 @@ func generateCreateWebhookRequest(cW *createWebhookCommand) (*http.Request, erro
 
 	req, err := generateRequestWithToken(
 		"POST",
-		fmt.Sprintf("v1/users/%s/webhooks", cW.Username),
+		fmt.Sprintf("v1/users/%s/webhooks", username),
 		paramStruct,
 	)
 	if err != nil {
@@ -75,9 +80,14 @@ func (gW *getWebhooksCommand) Execute(args []string) error {
 }
 
 func generateGetWebhooksRequest(gW *getWebhooksCommand) (*http.Request, error) {
+	username, err := getUsername(gW.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"GET",
-		fmt.Sprintf("v1/users/%s/webhooks", gW.Username),
+		fmt.Sprintf("v1/users/%s/webhooks", username),
 		nil,
 	)
 	if err != nil {
@@ -98,9 +108,14 @@ func (iW *invokeWebhookCommand) Execute(args []string) error {
 }
 
 func generateInvokeWebhookRequest(iW *invokeWebhookCommand) (*http.Request, error) {
+	username, err := getUsername(iW.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"POST",
-		fmt.Sprintf("v1/users/%s/webhooks/%s", iW.Username, iW.WebhookHash),
+		fmt.Sprintf("v1/users/%s/webhooks/%s", username, iW.WebhookHash),
 		nil,
 	)
 	if err != nil {
@@ -121,9 +136,14 @@ func (dW *deleteWebhookCommand) Execute(args []string) error {
 }
 
 func generateDeleteWebhookRequest(dW *deleteWebhookCommand) (*http.Request, error) {
+	username, err := getUsername(dW.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"DELETE",
-		fmt.Sprintf("v1/users/%s/webhooks/%s", dW.Username, dW.WebhookHash),
+		fmt.Sprintf("v1/users/%s/webhooks/%s", username, dW.WebhookHash),
 		nil,
 	)
 	if err != nil {

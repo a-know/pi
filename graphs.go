@@ -17,7 +17,7 @@ type graphsCommand struct {
 }
 
 type createGraphCommand struct {
-	Username       string `long:"username" description:"User name of graph owner." required:"true"`
+	Username       string `long:"username" description:"User name of graph owner."`
 	ID             string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Name           string `long:"name" description:"The name of the pixelation graph." required:"true"`
 	Unit           string `long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory." required:"true"`
@@ -37,19 +37,19 @@ type createGraphParam struct {
 }
 
 type getGraphsCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 }
 type getGraphParam struct{}
 
 type graphSVGCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Date     string `long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
 	Mode     string `long:"mode" description:"Specify the graph display mode." choice:"short"`
 }
 
 type updateGraphCommand struct {
-	Username       string   `long:"username" description:"User name of graph owner." required:"true"`
+	Username       string   `long:"username" description:"User name of graph owner."`
 	ID             string   `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	Name           string   `long:"name" description:"The name of the pixelation graph."`
 	Unit           string   `long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory."`
@@ -68,17 +68,17 @@ type updateGraphParam struct {
 }
 
 type graphDetailCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type deleteGraphCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 type getGraphPixelsCommand struct {
-	Username string `long:"username" description:"User name of graph owner." required:"true"`
+	Username string `long:"username" description:"User name of graph owner."`
 	ID       string `long:"id" description:"ID for identifying the pixelation graph." required:"true"`
 	From     string `long:"from" description:"Specify the start position of the period."`
 	To       string `long:"to" description:"Specify the end position of the period."`
@@ -95,6 +95,11 @@ func (cG *createGraphCommand) Execute(args []string) error {
 }
 
 func generateCreateGraphRequest(cG *createGraphCommand) (*http.Request, error) {
+	username, err := getUsername(cG.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	paramStruct := &createGraphParam{
 		ID:             cG.ID,
 		Name:           cG.Name,
@@ -107,7 +112,7 @@ func generateCreateGraphRequest(cG *createGraphCommand) (*http.Request, error) {
 
 	req, err := generateRequestWithToken(
 		"POST",
-		fmt.Sprintf("v1/users/%s/graphs", cG.Username),
+		fmt.Sprintf("v1/users/%s/graphs", username),
 		paramStruct,
 	)
 	if err != nil {
@@ -128,9 +133,14 @@ func (gG *getGraphsCommand) Execute(args []string) error {
 }
 
 func generateGetGraphsRequest(gG *getGraphsCommand) (*http.Request, error) {
+	username, err := getUsername(gG.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"GET",
-		fmt.Sprintf("v1/users/%s/graphs", gG.Username),
+		fmt.Sprintf("v1/users/%s/graphs", username),
 		nil,
 	)
 	if err != nil {
@@ -141,17 +151,26 @@ func generateGetGraphsRequest(gG *getGraphsCommand) (*http.Request, error) {
 }
 
 func (gS *graphSVGCommand) Execute(args []string) error {
-	url := generateSVGUrl(gS)
+	url, err := generateSVGUrl(gS)
+	if err != nil {
+		return err
+	}
+
 	fmt.Print(url)
 	return nil
 }
 
-func generateSVGUrl(gS *graphSVGCommand) string {
+func generateSVGUrl(gS *graphSVGCommand) (string, error) {
+	username, err := getUsername(gS.Username)
+	if err != nil {
+		return username, err
+	}
+
 	apibase := os.Getenv("PIXELA_API_BASE")
 	if apibase == "" {
 		apibase = "pixe.la"
 	}
-	url := fmt.Sprintf("https://%s/v1/users/%s/graphs/%s", apibase, gS.Username, gS.ID)
+	url := fmt.Sprintf("https://%s/v1/users/%s/graphs/%s", apibase, username, gS.ID)
 
 	if gS.Date != "" {
 		url = fmt.Sprintf("%s?date=%s", url, gS.Date)
@@ -161,7 +180,7 @@ func generateSVGUrl(gS *graphSVGCommand) string {
 	} else if gS.Mode != "" {
 		url = fmt.Sprintf("%s?mode=%s", url, gS.Mode)
 	}
-	return url
+	return url, nil
 }
 
 func (uG *updateGraphCommand) Execute(args []string) error {
@@ -175,6 +194,11 @@ func (uG *updateGraphCommand) Execute(args []string) error {
 }
 
 func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
+	username, err := getUsername(uG.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	if len(uG.PurgeCacheURLs) > 5 {
 		return nil, fmt.Errorf("you can only specify up to five URLs for PurgeCacheURLs param")
 	}
@@ -190,7 +214,7 @@ func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 
 	req, err := generateRequestWithToken(
 		"PUT",
-		fmt.Sprintf("v1/users/%s/graphs/%s", uG.Username, uG.ID),
+		fmt.Sprintf("v1/users/%s/graphs/%s", username, uG.ID),
 		paramStruct,
 	)
 	if err != nil {
@@ -201,11 +225,16 @@ func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 }
 
 func (gD *graphDetailCommand) Execute(args []string) error {
+	username, err := getUsername(gD.Username)
+	if err != nil {
+		return err
+	}
+
 	apibase := os.Getenv("PIXELA_API_BASE")
 	if apibase == "" {
 		apibase = "pixe.la"
 	}
-	fmt.Printf("https://%s/v1/users/%s/graphs/%s.html", apibase, gD.Username, gD.ID)
+	fmt.Printf("https://%s/v1/users/%s/graphs/%s.html", apibase, username, gD.ID)
 	return nil
 }
 
@@ -220,9 +249,14 @@ func (dG *deleteGraphCommand) Execute(args []string) error {
 }
 
 func generateDeleteGraphRequest(dG *deleteGraphCommand) (*http.Request, error) {
+	username, err := getUsername(dG.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := generateRequestWithToken(
 		"DELETE",
-		fmt.Sprintf("v1/users/%s/graphs/%s", dG.Username, dG.ID),
+		fmt.Sprintf("v1/users/%s/graphs/%s", username, dG.ID),
 		nil,
 	)
 	if err != nil {
@@ -242,7 +276,12 @@ func (gGP *getGraphPixelsCommand) Execute(args []string) error {
 }
 
 func generateGetGraphPixelsRequest(gGP *getGraphPixelsCommand) (*http.Request, error) {
-	url := fmt.Sprintf("v1/users/%s/graphs/%s/pixels", gGP.Username, gGP.ID)
+	username, err := getUsername(gGP.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf("v1/users/%s/graphs/%s/pixels", username, gGP.ID)
 
 	if gGP.From != "" {
 		url = fmt.Sprintf("%s?from=%s", url, gGP.From)
