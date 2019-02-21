@@ -20,7 +20,7 @@ type createGraphCommand struct {
 	Username       string `short:"u" long:"username" description:"User name of graph owner."`
 	ID             string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 	Name           string `short:"n" long:"name" description:"The name of the pixelation graph." required:"true"`
-	Unit           string `short:"u" long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory." required:"true"`
+	Unit           string `short:"i" long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory." required:"true"`
 	Type           string `short:"t" long:"type" description:"The type of quantity to be handled in the graph. Only int or float are supported." choice:"int" choice:"float" required:"true"`
 	Color          string `short:"c" long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro" required:"true"`
 	Timezone       string `short:"z" long:"timezone" description:"The timezone for handling this graph"`
