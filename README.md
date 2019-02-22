@@ -4,12 +4,13 @@
 [travis]: https://travis-ci.org/a-know/pi
 
 
-![](https://user-images.githubusercontent.com/1097533/53243207-84d04680-36ea-11e9-8465-f73d62b4b502.png)
-
-
 ## Description
 
 `pi` (`[pí]`) is a CLI tool for Pixela ([pixe.la](https://pixe.la/))
+
+
+![](https://user-images.githubusercontent.com/1097533/53243207-84d04680-36ea-11e9-8465-f73d62b4b502.png)
+
 
 ## Installation
 
