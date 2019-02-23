@@ -4,6 +4,8 @@ go:
 script:
 - make lint
 - make citest
+after_script:
+- curl -X POST https://pixe.la/v1/users/a-know/webhooks/$CI_WEBHOOK_HASH -H 'Content-Length:0'
 env:
   global:
     PIXELA_API_BASE='pixela.example.com'
