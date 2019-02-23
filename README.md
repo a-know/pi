@@ -78,6 +78,15 @@
 ## Options
 Please see the running result each subcommands with `-h`.
 
+
+## CI running count
+
+[![CI running count](https://pixe.la/v1/users/pi/graphs/ci-count)][ci-count]
+
+[ci-count]: https://pixe.la/v1/users/pi/graphs/ci-count.html
+
+
+
 ## Author
 
 [a-know](https://github.com/a-know)
