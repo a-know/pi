@@ -1,5 +1,5 @@
 # pi [pí]
-[![Build Status](https://travis-ci.org/a-know/pi.png?branch=master)][travis]
+[![Travis Build Status](https://travis-ci.org/a-know/pi.svg?branch=master)][travis]
 
 [travis]: https://travis-ci.org/a-know/pi
 
