@@ -18,7 +18,7 @@ type CLI struct {
 	OutStream, ErrStream io.Writer
 }
 
-// Run the ghg
+// Run the pi
 func (cli *CLI) Run(argv []string) int {
 	log.SetOutput(cli.ErrStream)
 	log.SetFlags(0)
