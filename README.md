@@ -16,6 +16,9 @@
 
     % go get github.com/a-know/pi/cmd/pi
 
+
+And, there is explanation blog entry; ["草APIサービス" Pixela のコマンドラインツールを作ったので、OSごとのインストール・使い方を書きます！](https://blog.a-know.me/entry/2019/02/24/214142) (in Japanese)
+
 ## Synopsis
 
     % pi users create --username a-know --token thisissecret --agree-terms-of-service yes --not-minor yes
