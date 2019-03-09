@@ -17,9 +17,7 @@ func generateRequest(method string, path string, paramStruct interface{}) (*http
 	}
 
 	var reqBody io.Reader
-	if paramStruct == nil {
-		reqBody = nil
-	} else {
+	if paramStruct != nil {
 		params, err := json.Marshal(paramStruct)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to marshal options to json : %s", err)
