@@ -41,16 +41,19 @@ func generateRequest(method string, path string, paramStruct interface{}) (*http
 }
 
 func generateRequestWithToken(method string, path string, paramStruct interface{}) (*http.Request, error) {
-	req, err := generateRequest(method, path, paramStruct)
 
 	token := os.Getenv("PIXELA_USER_TOKEN")
 	if token == "" {
 		return nil, fmt.Errorf("token is not set. please specify your token by PIXELA_USER_TOKEN environment variable")
 	}
 
-	req.Header.Set("X-USER-TOKEN", token)
+	req, err := generateRequest(method, path, paramStruct)
 
-	return req, err
+	if err == nil {
+		req.Header.Set("X-USER-TOKEN", token)
+	}
+
+	return rep, err
 }
 
 func doRequest(req *http.Request) error {
