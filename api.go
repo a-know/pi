@@ -53,7 +53,7 @@ func generateRequestWithToken(method string, path string, paramStruct interface{
 		req.Header.Set("X-USER-TOKEN", token)
 	}
 
-	return rep, err
+	return req, err
 }
 
 func doRequest(req *http.Request) error {
