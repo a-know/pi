@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.0.1](https://github.com/a-know/pi/compare/v1.0.0...v1.0.1) (2019-04-13)
+
+* Update for Pixela v1.9.0 [#8](https://github.com/a-know/pi/pull/8) ([a-know](https://github.com/a-know))
+* Changed processing order and added error check [#7](https://github.com/a-know/pi/pull/7) ([qt-luigi](https://github.com/qt-luigi))
+* Omit the else statements [#6](https://github.com/a-know/pi/pull/6) ([qt-luigi](https://github.com/qt-luigi))
+* fix comment [#5](https://github.com/a-know/pi/pull/5) ([qt-luigi](https://github.com/qt-luigi))
+* Add a link to explanation blog entry [#4](https://github.com/a-know/pi/pull/4) ([a-know](https://github.com/a-know))
+* Embed CI count pixela graph to README [#3](https://github.com/a-know/pi/pull/3) ([a-know](https://github.com/a-know))
+* Fix: Build status badge image format PNG to SVG [#2](https://github.com/a-know/pi/pull/2) ([peaceiris](https://github.com/peaceiris))
+
 ## [v1.0.0](https://github.com/a-know/pi/compare/v0.1.0...v1.0.0) (2019-02-22)
 
 * Create LICENSE [#1](https://github.com/a-know/pi/pull/1) ([a-know](https://github.com/a-know))
