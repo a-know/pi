@@ -45,7 +45,7 @@ type graphSVGCommand struct {
 	Username string `short:"u" long:"username" description:"User name of graph owner."`
 	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 	Date     string `short:"d" long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
-	Mode     string `short:"m" long:"mode" description:"Specify the graph display mode." choice:"short"`
+	Mode     string `short:"m" long:"mode" description:"Specify the graph display mode." choice:"short" choice:"line"`
 }
 
 type updateGraphCommand struct {
