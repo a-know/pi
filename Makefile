@@ -42,8 +42,11 @@ build: deps
 .PHONY: crossbuild
 crossbuild: devel-deps
 	env GO111MODULE=on goxz -pv=v$(shell gobump show -r) -build-ldflags=$(BUILD_LDFLAGS) \
-	  -os=linux,darwin,windows,freebsd -arch=amd64 -d=./dist/v$(shell gobump show -r) \
+	  -os=linux,darwin,freebsd -arch=amd64 -d=./dist/v$(shell gobump show -r) \
 	  ./cmd/pi
+	env GO111MODULE=on goxz -pv=v$(shell gobump show -r) -build-ldflags=$(BUILD_LDFLAGS) \
+	  -os=windows -arch=amd64 -d=./dist/v$(shell gobump show -r) \
+	  -o=pi.exe ./cmd/pi
 
 .PHONY: bump
 bump: devel-deps
