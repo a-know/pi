@@ -14,6 +14,7 @@ type graphsCommand struct {
 	Detail graphDetailCommand    `description:"get Graph detail URL" command:"detail" subcommands-optional:"true"`
 	Delete deleteGraphCommand    `description:"delete Graph" command:"delete" subcommands-optional:"true"`
 	Pixels getGraphPixelsCommand `description:"get Graph Pixels" command:"pixels" subcommands-optional:"true"`
+	Stats  getGraphStatsCommand  `description:"get Graph stats" command:"stats" subcommands-optional:"true"`
 }
 
 type createGraphCommand struct {
@@ -82,6 +83,11 @@ type getGraphPixelsCommand struct {
 	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 	From     string `short:"f" long:"from" description:"Specify the start position of the period."`
 	To       string `short:"t" long:"to" description:"Specify the end position of the period."`
+}
+
+type getGraphStatsCommand struct {
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
+	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
 }
 
 func (cG *createGraphCommand) Execute(args []string) error {
@@ -301,5 +307,32 @@ func generateGetGraphPixelsRequest(gGP *getGraphPixelsCommand) (*http.Request, e
 		return nil, fmt.Errorf("Failed to generate get api request : %s", err)
 	}
 
+	return req, nil
+}
+
+func (gS *getGraphStatsCommand) Execute(args []string) error {
+	req, err := generateGetGraphStatsRequest(gS)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generateGetGraphStatsRequest(gS *getGraphStatsCommand) (*http.Request, error) {
+	username, err := getUsername(gS.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := generateRequest(
+		"GET",
+		fmt.Sprintf("v1/users/%s/graphs/%s/stats", username, gS.ID),
+		nil,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate create api request : %s", err)
+	}
 	return req, nil
 }
