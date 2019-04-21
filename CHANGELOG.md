@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.2](https://github.com/a-know/pi/compare/v1.0.1...v1.0.2) (2019-04-21)
+
+* Update for v1.10.0 [#11](https://github.com/a-know/pi/pull/11) ([a-know](https://github.com/a-know))
+
 ## [v1.0.1](https://github.com/a-know/pi/compare/v1.0.0...v1.0.1) (2019-04-13)
 
 * Update for Pixela v1.9.0 [#8](https://github.com/a-know/pi/pull/8) ([a-know](https://github.com/a-know))
