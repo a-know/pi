@@ -131,6 +131,16 @@ var graphTests = []struct {
 		input:    []string{"graphs", "pixels", "--username", "c-know"},
 		exitCode: 1,
 	},
+	{
+		name:     "get graph stats - not specify username",
+		input:    []string{"graphs", "stats", "--graph-id", "test-id"},
+		exitCode: 1,
+	},
+	{
+		name:     "get graph stats - not specify id",
+		input:    []string{"graphs", "stats", "--username", "c-know"},
+		exitCode: 1,
+	},
 }
 
 func TestGraph(t *testing.T) {
@@ -616,6 +626,43 @@ func TestGenerateGetGraphPixelsRequestBothParamSpecified(t *testing.T) {
 		t.Errorf("Unexpected request method. %s", req.Method)
 	}
 	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s/pixels?from=%s&to=%s", afterAPIBaseEnv, testUsername, testID, testFrom, testTo) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		defer req.Body.Close()
+		if err != nil {
+			t.Errorf("Failed to read request body. %s", err)
+		}
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateGetGraphStatsRequest(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	cmd := &getGraphStatsCommand{
+		Username: testUsername,
+		ID:       testID,
+	}
+
+	// run
+	req, err := generateGetGraphStatsRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "GET" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s/stats", afterAPIBaseEnv, testUsername, testID) {
 		t.Errorf("Unexpected request path. %s", req.URL.String())
 	}
 	if req.Body != nil {
