@@ -56,6 +56,7 @@ And, there is explanation blog entry; ["草APIサービス" Pixela のコマン�
   pixels  get Graph Pixels
   svg     get SVG Graph URL
   update  update Graph Definition
+  stats   get Graph stats
 ```
 
 
@@ -88,7 +89,9 @@ Please see the running result each subcommands with `-h`.
 
 [ci-count]: https://pixe.la/v1/users/pi/graphs/ci-count.html
 
+## References
 
+[Pixela API Document](https://docs.pixe.la/)
 
 ## Author
 
