@@ -12,6 +12,7 @@ type graphsCommand struct {
 	SVG    graphSVGCommand       `description:"get SVG Graph URL" command:"svg" subcommands-optional:"true"`
 	Update updateGraphCommand    `description:"update Graph Definition" command:"update" subcommands-optional:"true"`
 	Detail graphDetailCommand    `description:"get Graph detail URL" command:"detail" subcommands-optional:"true"`
+	List   graphListCommand      `description:"get Graph List page URL" command:"list" subcommands-optional:"true"`
 	Delete deleteGraphCommand    `description:"delete Graph" command:"delete" subcommands-optional:"true"`
 	Pixels getGraphPixelsCommand `description:"get Graph Pixels" command:"pixels" subcommands-optional:"true"`
 	Stats  getGraphStatsCommand  `description:"get Graph stats" command:"stats" subcommands-optional:"true"`
@@ -71,6 +72,10 @@ type updateGraphParam struct {
 type graphDetailCommand struct {
 	Username string `short:"u" long:"username" description:"User name of graph owner."`
 	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+}
+
+type graphListCommand struct {
+	Username string `short:"u" long:"username" description:"User name of graph owner."`
 }
 
 type deleteGraphCommand struct {
@@ -241,6 +246,20 @@ func (gD *graphDetailCommand) Execute(args []string) error {
 		apibase = "pixe.la"
 	}
 	fmt.Printf("https://%s/v1/users/%s/graphs/%s.html", apibase, username, gD.ID)
+	return nil
+}
+
+func (gL *graphListCommand) Execute(args []string) error {
+	username, err := getUsername(gL.Username)
+	if err != nil {
+		return err
+	}
+
+	apibase := os.Getenv("PIXELA_API_BASE")
+	if apibase == "" {
+		apibase = "pixe.la"
+	}
+	fmt.Printf("https://%s/v1/users/%s/graphs.html", apibase, username)
 	return nil
 }
 

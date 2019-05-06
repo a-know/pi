@@ -112,6 +112,11 @@ var graphTests = []struct {
 		exitCode: 1,
 	},
 	{
+		name:     "get graph list page url - not specify username",
+		input:    []string{"graphs", "list"},
+		exitCode: 1,
+	},
+	{
 		name:     "delete graph - not specify username",
 		input:    []string{"graphs", "delete", "--graph-id", "test-id"},
 		exitCode: 1,
