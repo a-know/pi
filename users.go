@@ -16,6 +16,7 @@ type createUserCommand struct {
 	Username            string `short:"u" long:"username" description:"User name to be created." required:"true"`
 	AgreeTermsOfService string `short:"a" long:"agree-terms-of-service" description:"Specify yes or no whether you agree to the terms of service." choice:"yes" choice:"no" required:"true"`
 	NotMinor            string `short:"m" long:"not-minor" description:"Specify yes or no as to whether you are not a minor or if you are a minor and you have the parental consent of using pixela." choice:"yes" choice:"no" required:"true"`
+	ThanksCode          string `short:"c" long:"thanks-code" description:"Like a registration code obtained when you register for Patreon support. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
 
 type createUserParams struct {
@@ -23,15 +24,18 @@ type createUserParams struct {
 	Username   string `json:"username"`
 	AgreeTerms string `json:"agreeTermsOfService"`
 	NotMinor   string `json:"notMinor"`
+	ThanksCode string `json:"thanksCode"`
 }
 
 type updateUserCommand struct {
-	Username string `short:"u" long:"username" description:"User name to be updated."`
-	NewToken string `short:"t" long:"new-token" description:"A new authentication token for update." required:"true"`
+	Username   string `short:"u" long:"username" description:"User name to be updated."`
+	NewToken   string `short:"t" long:"new-token" description:"A new authentication token for update." required:"true"`
+	ThanksCode string `short:"c" long:"thanks-code" description:"Like a registration code obtained when you register for Patreon support. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
 
 type updateUserParams struct {
-	NewToken string `json:"newToken"`
+	NewToken   string `json:"newToken"`
+	ThanksCode string `json:"thanksCode"`
 }
 
 type deleteUserCommand struct {
@@ -55,6 +59,7 @@ func generateCreateUserRequest(cC *createUserCommand) (*http.Request, error) {
 		Username:   cC.Username,
 		AgreeTerms: cC.AgreeTermsOfService,
 		NotMinor:   cC.NotMinor,
+		ThanksCode: cC.ThanksCode,
 	}
 
 	req, err := generateRequest(
@@ -85,7 +90,8 @@ func generateUpdateUserRequest(uC *updateUserCommand) (*http.Request, error) {
 	}
 
 	paramStruct := &updateUserParams{
-		NewToken: uC.NewToken,
+		NewToken:   uC.NewToken,
+		ThanksCode: uC.ThanksCode,
 	}
 
 	req, err := generateRequestWithToken(
