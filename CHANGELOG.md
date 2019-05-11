@@ -1,5 +1,8 @@
 # Changelog
 
+## [v1.0.3](https://github.com/a-know/pi/compare/v1.0.3...v1.0.3) (2019-05-11)
+
+
 ## [v1.0.3](https://github.com/a-know/pi/compare/v1.0.2...v1.0.3) (2019-05-11)
 
 * v1.11.0 [#13](https://github.com/a-know/pi/pull/13) ([a-know](https://github.com/a-know))
