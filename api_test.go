@@ -46,7 +46,7 @@ func TestGenerateRequestApiBaseEnvExist(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to read request body. %s", err)
 	}
-	if string(b) != fmt.Sprintf("{\"token\":\"%s\",\"username\":\"%s\",\"agreeTermsOfService\":\"%s\",\"notMinor\":\"%s\"}", testToken, testUsername, testAgreement, testMinor) {
+	if string(b) != fmt.Sprintf("{\"token\":\"%s\",\"username\":\"%s\",\"agreeTermsOfService\":\"%s\",\"notMinor\":\"%s\",\"thanksCode\":\"\"}", testToken, testUsername, testAgreement, testMinor) {
 		t.Errorf("Unexpected request body. %s", string(b))
 	}
 	if req.Header.Get("Content-Type") != "application/json" {

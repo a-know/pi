@@ -78,11 +78,13 @@ func TestGenerateCreateUserRequest(t *testing.T) {
 	testUsername := "c-know"
 	testAgreeTermsOfService := "false"
 	testNotMinor := "true"
+	testThanksCode := "ThisIsThanksCode"
 	cmd := &createUserCommand{
 		Token:               testToken,
 		Username:            testUsername,
 		AgreeTermsOfService: testAgreeTermsOfService,
 		NotMinor:            testNotMinor,
+		ThanksCode:          testThanksCode,
 	}
 
 	// run
@@ -106,7 +108,7 @@ func TestGenerateCreateUserRequest(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to read request body. %s", err)
 	}
-	if string(b) != fmt.Sprintf(`{"token":"%s","username":"%s","agreeTermsOfService":"%s","notMinor":"%s"}`, testToken, testUsername, testAgreeTermsOfService, testNotMinor) {
+	if string(b) != fmt.Sprintf(`{"token":"%s","username":"%s","agreeTermsOfService":"%s","notMinor":"%s","thanksCode":"%s"}`, testToken, testUsername, testAgreeTermsOfService, testNotMinor, testThanksCode) {
 		t.Errorf("Unexpected request body. %s", string(b))
 	}
 }
@@ -117,9 +119,11 @@ func TestGenerateUpdateUserRequest(t *testing.T) {
 
 	testUsername := "c-know"
 	testNewToken := "thisissecret"
+	testThanksCode := "ThisIsThanksCode"
 	cmd := &updateUserCommand{
-		Username: testUsername,
-		NewToken: testNewToken,
+		Username:   testUsername,
+		NewToken:   testNewToken,
+		ThanksCode: testThanksCode,
 	}
 
 	// run
@@ -143,7 +147,7 @@ func TestGenerateUpdateUserRequest(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to read request body. %s", err)
 	}
-	if string(b) != fmt.Sprintf(`{"newToken":"%s"}`, testNewToken) {
+	if string(b) != fmt.Sprintf(`{"newToken":"%s","thanksCode":"%s"}`, testNewToken, testThanksCode) {
 		t.Errorf("Unexpected request body. %s", string(b))
 	}
 	if req.Header.Get("X-USER-TOKEN") != afterTokenEnv {
