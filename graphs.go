@@ -27,7 +27,9 @@ type createGraphCommand struct {
 	Color          string `short:"c" long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro" required:"true"`
 	Timezone       string `short:"z" long:"timezone" description:"The timezone for handling this graph"`
 	SelfSufficient string `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
+	IsSecret       *bool  `short:"x" long:"is-secret" description:"When this property is true, the graph is hidden on the list page. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
+
 type createGraphParam struct {
 	ID             string `json:"id"`
 	Name           string `json:"name"`
@@ -36,6 +38,7 @@ type createGraphParam struct {
 	Color          string `json:"color"`
 	Timezone       string `json:"timezone"`
 	SelfSufficient string `json:"selfSufficient"`
+	IsSecret       *bool  `json:"isSecret,omitempty"`
 }
 
 type getGraphsCommand struct {
@@ -59,6 +62,7 @@ type updateGraphCommand struct {
 	Timezone       string   `short:"z" long:"timezone" description:"The timezone for handling this graph"`
 	PurgeCacheURLs []string `short:"p" long:"purge-cache-urls" description:"The URL to send the purge request to purge the cache when the graph is updated. Multiple params can be specified."`
 	SelfSufficient string   `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
+	IsSecret       *bool    `short:"x" long:"is-secret" description:"When this property is true, the graph is hidden on the list page. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
 type updateGraphParam struct {
 	Name           string   `json:"name"`
@@ -67,6 +71,7 @@ type updateGraphParam struct {
 	Timezone       string   `json:"timezone"`
 	PurgeCacheURLs []string `json:"purgeCacheURLs"`
 	SelfSufficient string   `json:"selfSufficient"`
+	IsSecret       *bool    `json:"isSecret,omitempty"`
 }
 
 type graphDetailCommand struct {
@@ -119,6 +124,7 @@ func generateCreateGraphRequest(cG *createGraphCommand) (*http.Request, error) {
 		Color:          cG.Color,
 		Timezone:       cG.Timezone,
 		SelfSufficient: cG.SelfSufficient,
+		IsSecret:       cG.IsSecret,
 	}
 
 	req, err := generateRequestWithToken(
@@ -221,6 +227,7 @@ func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 		Timezone:       uG.Timezone,
 		PurgeCacheURLs: uG.PurgeCacheURLs,
 		SelfSufficient: uG.SelfSufficient,
+		IsSecret:       uG.IsSecret,
 	}
 
 	req, err := generateRequestWithToken(

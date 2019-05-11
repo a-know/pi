@@ -172,6 +172,57 @@ func TestGenerateCreateGraphRequest(t *testing.T) {
 	testColor := "ajisai"
 	testTimezone := "asia/Tokyo"
 	testSelfSufficient := "none"
+	testIsSecret := true
+	cmd := &createGraphCommand{
+		Username:       testUsername,
+		ID:             testID,
+		Name:           testName,
+		Unit:           testUnit,
+		Type:           testType,
+		Color:          testColor,
+		Timezone:       testTimezone,
+		SelfSufficient: testSelfSufficient,
+		IsSecret:       &testIsSecret,
+	}
+
+	// run
+	req, err := generateCreateGraphRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "POST" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs", afterAPIBaseEnv, testUsername) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"id":"%s","name":"%s","unit":"%s","type":"%s","color":"%s","timezone":"%s","selfSufficient":"%s","isSecret":%t}`, testID, testName, testUnit, testType, testColor, testTimezone, testSelfSufficient, testIsSecret) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateCreateGraphRequestWithoutIsSecret(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testName := "test-name"
+	testUnit := "commits"
+	testType := "int"
+	testColor := "ajisai"
+	testTimezone := "asia/Tokyo"
+	testSelfSufficient := "none"
 	cmd := &createGraphCommand{
 		Username:       testUsername,
 		ID:             testID,
@@ -365,6 +416,57 @@ func TestGenerateSVGUrlBothParamSpecified(t *testing.T) {
 }
 
 func TestGenerateUpdateGraphRequest(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testName := "test-name"
+	testUnit := "commits"
+	testColor := "ajisai"
+	testTimezone := "asia/Tokyo"
+	testSelfSufficient := "none"
+	testPurgeCacheURLs := []string{"http://test.example.com/"}
+	testIsSecret := true
+	cmd := &updateGraphCommand{
+		Username:       testUsername,
+		ID:             testID,
+		Name:           testName,
+		Unit:           testUnit,
+		Color:          testColor,
+		Timezone:       testTimezone,
+		PurgeCacheURLs: testPurgeCacheURLs,
+		SelfSufficient: testSelfSufficient,
+		IsSecret:       &testIsSecret,
+	}
+
+	// run
+	req, err := generateUpdateGraphRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "PUT" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s", afterAPIBaseEnv, testUsername, testID) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"name":"%s","unit":"%s","color":"%s","timezone":"%s","purgeCacheURLs":["%s"],"selfSufficient":"%s","isSecret":%t}`, testName, testUnit, testColor, testTimezone, testPurgeCacheURLs[0], testSelfSufficient, testIsSecret) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateUpdateGraphRequestWithoutIsSecret(t *testing.T) {
 	// prepare
 	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
 
