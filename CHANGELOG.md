@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.0.3](https://github.com/a-know/pi/compare/v1.0.2...v1.0.3) (2019-05-11)
+
+* v1.11.0 [#13](https://github.com/a-know/pi/pull/13) ([a-know](https://github.com/a-know))
+* Add: how to install pi with brew command [#12](https://github.com/a-know/pi/pull/12) ([peaceiris](https://github.com/peaceiris))
+
 ## [v1.0.2](https://github.com/a-know/pi/compare/v1.0.1...v1.0.2) (2019-04-21)
 
 * Update for v1.10.0 [#11](https://github.com/a-know/pi/pull/11) ([a-know](https://github.com/a-know))
