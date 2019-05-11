@@ -16,6 +16,9 @@
 
     % go get github.com/a-know/pi/cmd/pi
 
+OR
+
+    % brew install a-know/tap/pi
 
 And, there is explanation blog entry; ["草APIサービス" Pixela のコマンドラインツールを作ったので、OSごとのインストール・使い方を書きます！](https://blog.a-know.me/entry/2019/02/24/214142) (in Japanese)
 
