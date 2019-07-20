@@ -15,5 +15,4 @@ func prepare() (string, string, string, string) {
 func cleanup(beforeAPIBaseEnv string, beforeTokenEnv string) {
 	os.Setenv("PIXELA_API_BASE", beforeAPIBaseEnv)
 	os.Setenv("PIXELA_USER_TOKEN", beforeTokenEnv)
-	return
 }
