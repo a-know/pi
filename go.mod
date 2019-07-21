@@ -15,6 +15,6 @@ require (
 	github.com/octokit/go-octokit v0.4.1-0.20160312003706-812e91dfbd64 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/rakyll/gotest v0.0.0-20180125184505-86f0749cd8cc // indirect
-	github.com/tcnksm/ghr v0.12.1 // indirect
+	github.com/tcnksm/ghr v0.12.2 // indirect
 	golang.org/x/lint v0.0.0-20190409202823-959b441ac422 // indirect
 )

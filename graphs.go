@@ -44,7 +44,6 @@ type createGraphParam struct {
 type getGraphsCommand struct {
 	Username string `short:"u" long:"username" description:"User name of graph owner."`
 }
-type getGraphParam struct{}
 
 type graphSVGCommand struct {
 	Username string `short:"u" long:"username" description:"User name of graph owner."`
