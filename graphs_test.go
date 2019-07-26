@@ -182,7 +182,7 @@ func TestGenerateCreateGraphRequest(t *testing.T) {
 		Color:          testColor,
 		Timezone:       testTimezone,
 		SelfSufficient: testSelfSufficient,
-		IsSecret:       &testIsSecret,
+		Secret:         &testIsSecret,
 	}
 
 	// run
@@ -438,8 +438,8 @@ func TestGenerateUpdateGraphRequestWithSecretAndPublish(t *testing.T) {
 		Timezone:       testTimezone,
 		PurgeCacheURLs: testPurgeCacheURLs,
 		SelfSufficient: testSelfSufficient,
-		IsSecret:       &testIsSecret,
-		IsPublish:      &testIsPublish,
+		Secret:         &testIsSecret,
+		Publish:        &testIsPublish,
 	}
 
 	// run
@@ -476,7 +476,7 @@ func TestGenerateUpdateGraphRequestWithSecret(t *testing.T) {
 		Timezone:       testTimezone,
 		PurgeCacheURLs: testPurgeCacheURLs,
 		SelfSufficient: testSelfSufficient,
-		IsSecret:       &testIsSecret,
+		Secret:         &testIsSecret,
 	}
 
 	// run
@@ -527,8 +527,8 @@ func TestGenerateUpdateGraphRequestWithPublish(t *testing.T) {
 		Timezone:       testTimezone,
 		PurgeCacheURLs: testPurgeCacheURLs,
 		SelfSufficient: testSelfSufficient,
-		IsSecret:       nil,
-		IsPublish:      &testIsPublish,
+		Secret:         nil,
+		Publish:        &testIsPublish,
 	}
 
 	// run
