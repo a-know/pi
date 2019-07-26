@@ -221,7 +221,7 @@ func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 	}
 
 	if uG.Secret != nil && uG.Publish != nil && *uG.Secret && *uG.Publish {
-		return nil, fmt.Errorf("specify either --secret or --publish")
+		return nil, fmt.Errorf("specify either --secret,-x or --publish,-r")
 	}
 
 	var isSecret *bool
