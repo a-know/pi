@@ -19,26 +19,28 @@ type graphsCommand struct {
 }
 
 type createGraphCommand struct {
-	Username       string `short:"u" long:"username" description:"User name of graph owner."`
-	ID             string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Name           string `short:"n" long:"name" description:"The name of the pixelation graph." required:"true"`
-	Unit           string `short:"i" long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory." required:"true"`
-	Type           string `short:"t" long:"type" description:"The type of quantity to be handled in the graph. Only int or float are supported." choice:"int" choice:"float" required:"true"`
-	Color          string `short:"c" long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro" required:"true"`
-	Timezone       string `short:"z" long:"timezone" description:"The timezone for handling this graph"`
-	SelfSufficient string `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
-	Secret         *bool  `short:"x" long:"secret" description:"When this property is specified, the graph is hidden on the list page. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
+	Username            string `short:"u" long:"username" description:"User name of graph owner."`
+	ID                  string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Name                string `short:"n" long:"name" description:"The name of the pixelation graph." required:"true"`
+	Unit                string `short:"i" long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory." required:"true"`
+	Type                string `short:"t" long:"type" description:"The type of quantity to be handled in the graph. Only int or float are supported." choice:"int" choice:"float" required:"true"`
+	Color               string `short:"c" long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro" required:"true"`
+	Timezone            string `short:"z" long:"timezone" description:"The timezone for handling this graph"`
+	SelfSufficient      string `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
+	Secret              *bool  `short:"x" long:"secret" description:"When this property is specified, the graph is hidden on the list page. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
+	PublishOptionalData *bool  `long:"publish-optional-data" description:"When this property is specified, the graph's each pixel optionalData will be added to the generated SVG. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
 
 type createGraphParam struct {
-	ID             string `json:"id"`
-	Name           string `json:"name"`
-	Unit           string `json:"unit"`
-	Type           string `json:"type"`
-	Color          string `json:"color"`
-	Timezone       string `json:"timezone"`
-	SelfSufficient string `json:"selfSufficient"`
-	IsSecret       *bool  `json:"isSecret,omitempty"`
+	ID                  string `json:"id"`
+	Name                string `json:"name"`
+	Unit                string `json:"unit"`
+	Type                string `json:"type"`
+	Color               string `json:"color"`
+	Timezone            string `json:"timezone"`
+	SelfSufficient      string `json:"selfSufficient"`
+	IsSecret            *bool  `json:"isSecret,omitempty"`
+	PublishOptionalData *bool  `json:"publishOptionalData,omitempty"`
 }
 
 type getGraphsCommand struct {
@@ -53,30 +55,34 @@ type graphSVGCommand struct {
 }
 
 type updateGraphCommand struct {
-	Username       string   `short:"u" long:"username" description:"User name of graph owner."`
-	ID             string   `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Name           string   `short:"n" long:"name" description:"The name of the pixelation graph."`
-	Unit           string   `short:"i" long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory."`
-	Color          string   `short:"c" long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro"`
-	Timezone       string   `short:"z" long:"timezone" description:"The timezone for handling this graph"`
-	PurgeCacheURLs []string `short:"p" long:"purge-cache-urls" description:"The URL to send the purge request to purge the cache when the graph is updated. Multiple params can be specified."`
-	SelfSufficient string   `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
-	Secret         *bool    `short:"x" long:"secret" description:"When this property is true, the graph is hidden on the list page. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
-	Publish        *bool    `short:"r" long:"publish" description:"When this property is specified, the graph will be released to the public. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
+	Username            string   `short:"u" long:"username" description:"User name of graph owner."`
+	ID                  string   `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Name                string   `short:"n" long:"name" description:"The name of the pixelation graph."`
+	Unit                string   `short:"i" long:"unit" description:"A unit of the quantity recorded in the pixelation graph. Ex) commit, kilogram, calory."`
+	Color               string   `short:"c" long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro"`
+	Timezone            string   `short:"z" long:"timezone" description:"The timezone for handling this graph"`
+	PurgeCacheURLs      []string `short:"p" long:"purge-cache-urls" description:"The URL to send the purge request to purge the cache when the graph is updated. Multiple params can be specified."`
+	SelfSufficient      string   `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
+	Secret              *bool    `short:"x" long:"secret" description:"When this property is true, the graph is hidden on the list page. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
+	Publish             *bool    `short:"r" long:"publish" description:"When this property is specified, the graph will be released to the public. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
+	PublishOptionalData *bool    `long:"publish-optional-data" description:"When this property is specified, the graph's each pixel optionalData will be added to the generated SVG. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
+	HideOptionalData    *bool    `long:"hide-optional-data" description:"When this property is specified, the graph's each pixel optionalData will not be added to the generated SVG. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
 type updateGraphParam struct {
-	Name           string   `json:"name"`
-	Unit           string   `json:"unit"`
-	Color          string   `json:"color"`
-	Timezone       string   `json:"timezone"`
-	PurgeCacheURLs []string `json:"purgeCacheURLs"`
-	SelfSufficient string   `json:"selfSufficient"`
-	IsSecret       *bool    `json:"isSecret,omitempty"`
+	Name                string   `json:"name"`
+	Unit                string   `json:"unit"`
+	Color               string   `json:"color"`
+	Timezone            string   `json:"timezone"`
+	PurgeCacheURLs      []string `json:"purgeCacheURLs"`
+	SelfSufficient      string   `json:"selfSufficient"`
+	IsSecret            *bool    `json:"isSecret,omitempty"`
+	PublishOptionalData *bool    `json:"publishOptionalData,omitempty"`
 }
 
 type graphDetailCommand struct {
 	Username string `short:"u" long:"username" description:"User name of graph owner."`
 	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Mode     string `short:"m" long:"mode" description:"Specify the graph html page mode." choice:"simple" choice:"simple-short"`
 }
 
 type graphListCommand struct {
@@ -117,14 +123,15 @@ func generateCreateGraphRequest(cG *createGraphCommand) (*http.Request, error) {
 	}
 
 	paramStruct := &createGraphParam{
-		ID:             cG.ID,
-		Name:           cG.Name,
-		Unit:           cG.Unit,
-		Type:           cG.Type,
-		Color:          cG.Color,
-		Timezone:       cG.Timezone,
-		SelfSufficient: cG.SelfSufficient,
-		IsSecret:       cG.Secret,
+		ID:                  cG.ID,
+		Name:                cG.Name,
+		Unit:                cG.Unit,
+		Type:                cG.Type,
+		Color:               cG.Color,
+		Timezone:            cG.Timezone,
+		SelfSufficient:      cG.SelfSufficient,
+		IsSecret:            cG.Secret,
+		PublishOptionalData: cG.PublishOptionalData,
 	}
 
 	req, err := generateRequestWithToken(
@@ -224,6 +231,10 @@ func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 		return nil, fmt.Errorf("specify either --secret,-x or --publish,-r")
 	}
 
+	if uG.HideOptionalData != nil && uG.PublishOptionalData != nil && *uG.HideOptionalData && *uG.PublishOptionalData {
+		return nil, fmt.Errorf("specify either --publish-optional-data or --hide-optional-data")
+	}
+
 	var isSecret *bool
 	falseValue := false
 	if uG.Publish != nil && *uG.Publish {
@@ -234,14 +245,24 @@ func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 		isSecret = uG.Secret
 	}
 
+	var publishOptionalData *bool
+	if uG.HideOptionalData != nil && *uG.HideOptionalData {
+		publishOptionalData = &falseValue
+	} else if uG.PublishOptionalData == nil {
+		// no ops, publishOptionalData value is nil as.
+	} else if *uG.PublishOptionalData {
+		publishOptionalData = uG.PublishOptionalData
+	}
+
 	paramStruct := &updateGraphParam{
-		Name:           uG.Name,
-		Unit:           uG.Unit,
-		Color:          uG.Color,
-		Timezone:       uG.Timezone,
-		PurgeCacheURLs: uG.PurgeCacheURLs,
-		SelfSufficient: uG.SelfSufficient,
-		IsSecret:       isSecret,
+		Name:                uG.Name,
+		Unit:                uG.Unit,
+		Color:               uG.Color,
+		Timezone:            uG.Timezone,
+		PurgeCacheURLs:      uG.PurgeCacheURLs,
+		SelfSufficient:      uG.SelfSufficient,
+		IsSecret:            isSecret,
+		PublishOptionalData: publishOptionalData,
 	}
 
 	req, err := generateRequestWithToken(
@@ -266,7 +287,13 @@ func (gD *graphDetailCommand) Execute(args []string) error {
 	if apibase == "" {
 		apibase = "pixe.la"
 	}
-	fmt.Printf("https://%s/v1/users/%s/graphs/%s.html", apibase, username, gD.ID)
+	url := fmt.Sprintf("https://%s/v1/users/%s/graphs/%s.html", apibase, username, gD.ID)
+
+	if gD.Mode != "" {
+		url = fmt.Sprintf("%s?mode=%s", url, gD.Mode)
+	}
+	fmt.Print(url)
+
 	return nil
 }
 
