@@ -27,7 +27,7 @@ type createGraphCommand struct {
 	Color          string `short:"c" long:"color" description:"The display color of the pixel in the pixelation graph." choice:"shibafu" choice:"momiji" choice:"sora" choice:"ichou" choice:"ajisai" choice:"kuro" required:"true"`
 	Timezone       string `short:"z" long:"timezone" description:"The timezone for handling this graph"`
 	SelfSufficient string `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
-	IsSecret       *bool  `short:"x" long:"is-secret" description:"When this property is true, the graph is hidden on the list page. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
+	IsSecret       *bool  `short:"x" long:"is-secret" description:"When this property is specified, the graph is hidden on the list page. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
 
 type createGraphParam struct {
@@ -62,6 +62,7 @@ type updateGraphCommand struct {
 	PurgeCacheURLs []string `short:"p" long:"purge-cache-urls" description:"The URL to send the purge request to purge the cache when the graph is updated. Multiple params can be specified."`
 	SelfSufficient string   `short:"s" long:"self-sufficient" description:"If SVG graph with this field 'increment' or 'decrement' is referenced, Pixel of this graph itself will be incremented or decremented." choice:"increment" choice:"decrement" choice:"none"`
 	IsSecret       *bool    `short:"x" long:"is-secret" description:"When this property is true, the graph is hidden on the list page. This is a limited feature. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
+	IsPublish      *bool    `short:"r" long:"is-publish" description:"When this property is specified, the graph will be released to the public. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
 type updateGraphParam struct {
 	Name           string   `json:"name"`
@@ -219,6 +220,20 @@ func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 		return nil, fmt.Errorf("you can only specify up to five URLs for PurgeCacheURLs param")
 	}
 
+	if uG.IsSecret != nil && uG.IsPublish != nil && *uG.IsSecret && *uG.IsPublish {
+		return nil, fmt.Errorf("specify either --is-secret or --is-publish")
+	}
+
+	var isSecret *bool
+	falseValue := false
+	if uG.IsPublish != nil && *uG.IsPublish {
+		isSecret = &falseValue
+	} else if uG.IsSecret == nil {
+		// no ops, isSecret value is nil as.
+	} else if *uG.IsSecret {
+		isSecret = uG.IsSecret
+	}
+
 	paramStruct := &updateGraphParam{
 		Name:           uG.Name,
 		Unit:           uG.Unit,
@@ -226,7 +241,7 @@ func generateUpdateGraphRequest(uG *updateGraphCommand) (*http.Request, error) {
 		Timezone:       uG.Timezone,
 		PurgeCacheURLs: uG.PurgeCacheURLs,
 		SelfSufficient: uG.SelfSufficient,
-		IsSecret:       uG.IsSecret,
+		IsSecret:       isSecret,
 	}
 
 	req, err := generateRequestWithToken(

@@ -415,7 +415,46 @@ func TestGenerateSVGUrlBothParamSpecified(t *testing.T) {
 	}
 }
 
-func TestGenerateUpdateGraphRequest(t *testing.T) {
+func TestGenerateUpdateGraphRequestWithSecretAndPublish(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, _, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testName := "test-name"
+	testUnit := "commits"
+	testColor := "ajisai"
+	testTimezone := "asia/Tokyo"
+	testSelfSufficient := "none"
+	testPurgeCacheURLs := []string{"http://test.example.com/"}
+	testIsSecret := true
+	testIsPublish := true
+	cmd := &updateGraphCommand{
+		Username:       testUsername,
+		ID:             testID,
+		Name:           testName,
+		Unit:           testUnit,
+		Color:          testColor,
+		Timezone:       testTimezone,
+		PurgeCacheURLs: testPurgeCacheURLs,
+		SelfSufficient: testSelfSufficient,
+		IsSecret:       &testIsSecret,
+		IsPublish:      &testIsPublish,
+	}
+
+	// run
+	_, err := generateUpdateGraphRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err == nil {
+		t.Errorf("Error should have occurs.")
+	}
+}
+
+func TestGenerateUpdateGraphRequestWithSecret(t *testing.T) {
 	// prepare
 	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
 
@@ -466,7 +505,59 @@ func TestGenerateUpdateGraphRequest(t *testing.T) {
 	}
 }
 
-func TestGenerateUpdateGraphRequestWithoutIsSecret(t *testing.T) {
+func TestGenerateUpdateGraphRequestWithPublish(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testName := "test-name"
+	testUnit := "commits"
+	testColor := "ajisai"
+	testTimezone := "asia/Tokyo"
+	testSelfSufficient := "none"
+	testPurgeCacheURLs := []string{"http://test.example.com/"}
+	testIsPublish := true
+	cmd := &updateGraphCommand{
+		Username:       testUsername,
+		ID:             testID,
+		Name:           testName,
+		Unit:           testUnit,
+		Color:          testColor,
+		Timezone:       testTimezone,
+		PurgeCacheURLs: testPurgeCacheURLs,
+		SelfSufficient: testSelfSufficient,
+		IsSecret:       nil,
+		IsPublish:      &testIsPublish,
+	}
+
+	// run
+	req, err := generateUpdateGraphRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "PUT" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s", afterAPIBaseEnv, testUsername, testID) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"name":"%s","unit":"%s","color":"%s","timezone":"%s","purgeCacheURLs":["%s"],"selfSufficient":"%s","isSecret":%t}`, testName, testUnit, testColor, testTimezone, testPurgeCacheURLs[0], testSelfSufficient, !testIsPublish) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateUpdateGraphRequestWithoutSecretOrPublish(t *testing.T) {
 	// prepare
 	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
 
