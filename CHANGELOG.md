@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.1.0](https://github.com/a-know/pi/compare/v1.0.3...v1.1.0) (2019-07-26)
+
+* Follow Pixela updates [#18](https://github.com/a-know/pi/pull/18) ([a-know](https://github.com/a-know))
+* Fix secret feature, flag [#17](https://github.com/a-know/pi/pull/17) ([a-know](https://github.com/a-know))
+* Refactoring and upgrading [#16](https://github.com/a-know/pi/pull/16) ([peaceiris](https://github.com/peaceiris))
+
 ## [v1.0.3](https://github.com/a-know/pi/compare/v1.0.3...v1.0.3) (2019-05-11)
 
 
