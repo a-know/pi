@@ -82,6 +82,7 @@ type updateGraphParam struct {
 type graphDetailCommand struct {
 	Username string `short:"u" long:"username" description:"User name of graph owner."`
 	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Mode     string `short:"m" long:"mode" description:"Specify the graph html page mode." choice:"simple" choice:"simple-short"`
 }
 
 type graphListCommand struct {
@@ -286,7 +287,13 @@ func (gD *graphDetailCommand) Execute(args []string) error {
 	if apibase == "" {
 		apibase = "pixe.la"
 	}
-	fmt.Printf("https://%s/v1/users/%s/graphs/%s.html", apibase, username, gD.ID)
+	url := fmt.Sprintf("https://%s/v1/users/%s/graphs/%s.html", apibase, username, gD.ID)
+
+	if gD.Mode != "" {
+		url = fmt.Sprintf("%s?mode=%s", url, gD.Mode)
+	}
+	fmt.Print(url)
+
 	return nil
 }
 
