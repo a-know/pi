@@ -1,8 +1,10 @@
 # pi [pí]
 [![Travis Build Status](https://travis-ci.org/a-know/pi.svg?branch=master)][travis]
+[![pixela][pixela-badge]][pixela]
 
 [travis]: https://travis-ci.org/a-know/pi
-
+[pixela-badge]: https://pixe.la/v1/users/pi/graphs/ci-count.svg?mode=badge
+[pixela]: https://pixe.la/v1/users/pi/graphs/ci-count.html
 
 ## Description
 
