@@ -8,6 +8,7 @@ import (
 
 type channelsCommand struct {
 	Create createChannelCommand `description:"create Channel" command:"create" subcommands-optional:"true"`
+	Update updateChannelCommand `description:"update Channel Definition" command:"update" subcommands-optional:"true"`
 	Get    getChannelsCommand   `description:"get Channel Definitions" command:"get" subcommands-optional:"true"`
 }
 
@@ -24,6 +25,21 @@ type createChannelParam struct {
 	Name   string          `json:"name"`
 	Type   string          `json:"type"`
 	Detail json.RawMessage `json:"detail"`
+}
+
+type updateChannelCommand struct {
+	Username string `short:"u" long:"username" description:"User name of channel owner."`
+	ID       string `short:"i" long:"channel-id" description:"ID for identifying the channel." required:"true"`
+	Name     string `short:"n" long:"name" description:"The name of the channel."`
+	Type     string `short:"t" long:"type" description:"The type for notification."`
+	Detail   string `short:"d" long:"detail" description:"Object that specifies the details of the type. It is specified as JSON string."`
+}
+
+type updateChannelParam struct {
+	ID     string          `json:"id"`
+	Name   string          `json:"name,omitempty"`
+	Type   string          `json:"type,omitempty"`
+	Detail json.RawMessage `json:"detail,omitempty"`
 }
 
 type getChannelsCommand struct {
@@ -60,6 +76,41 @@ func generateCreateChannelRequest(cC *createChannelCommand) (*http.Request, erro
 	)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to generate create api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (uC *updateChannelCommand) Execute(args []string) error {
+	req, err := generateUpdateChannelRequest(uC)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generateUpdateChannelRequest(uC *updateChannelCommand) (*http.Request, error) {
+	username, err := getUsername(uC.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	paramStruct := &updateChannelParam{
+		ID:     uC.ID,
+		Name:   uC.Name,
+		Type:   uC.Type,
+		Detail: json.RawMessage(uC.Detail),
+	}
+
+	req, err := generateRequestWithToken(
+		"PUT",
+		fmt.Sprintf("v1/users/%s/channels/%s", username, uC.ID),
+		paramStruct,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate update api request : %s", err)
 	}
 
 	return req, nil
