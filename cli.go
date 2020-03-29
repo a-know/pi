@@ -37,6 +37,7 @@ func (cli *CLI) Run(argv []string) int {
 
 type piOpts struct {
 	Users    usersCommand    `description:"operate Users" command:"users" subcommands-optional:"true"`
+	Channels channelsCommand `description:"operate Channels" command:"channels" subcommands-optional:"true"`
 	Graphs   graphsCommand   `description:"operate Graphs" command:"graphs" subcommands-optional:"true"`
 	Pixel    pixelCommand    `description:"operate Pixel in Graph" command:"pixel" subcommands-optional:"true"`
 	Webhooks webhooksCommand `description:"operate Webhooks" command:"webhooks" subcommands-optional:"true"`
