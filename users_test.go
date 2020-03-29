@@ -155,6 +155,48 @@ func TestGenerateUpdateUserRequest(t *testing.T) {
 	}
 }
 
+func TestGenerateUpdateUserRequestWithSomeParamas(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, afterTokenEnv := prepare()
+
+	testUsername := "c-know"
+	testThanksCode := "ThisIsThanksCode"
+	cmd := &updateUserCommand{
+		Username: testUsername,
+		// Not specify newToken
+		// NewToken:   testNewToken,
+		ThanksCode: testThanksCode,
+	}
+
+	// run
+	req, err := generateUpdateUserRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "PUT" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/%s/%s", afterAPIBaseEnv, "v1/users", testUsername) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"thanksCode":"%s"}`, testThanksCode) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+	if req.Header.Get("X-USER-TOKEN") != afterTokenEnv {
+		t.Errorf("Unexpected request header. %s", req.Header.Get("X-USER-TOKEN"))
+	}
+}
+
 func TestGenerateDeleteUserRequest(t *testing.T) {
 	// prepare
 	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, afterTokenEnv := prepare()

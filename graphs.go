@@ -69,12 +69,12 @@ type updateGraphCommand struct {
 	HideOptionalData    *bool    `long:"hide-optional-data" description:"When this property is specified, the graph's each pixel optionalData will not be added to the generated SVG. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
 type updateGraphParam struct {
-	Name                string   `json:"name"`
-	Unit                string   `json:"unit"`
-	Color               string   `json:"color"`
-	Timezone            string   `json:"timezone"`
-	PurgeCacheURLs      []string `json:"purgeCacheURLs"`
-	SelfSufficient      string   `json:"selfSufficient"`
+	Name                string   `json:"name,omitempty"`
+	Unit                string   `json:"unit,omitempty"`
+	Color               string   `json:"color,omitempty"`
+	Timezone            string   `json:"timezone,omitempty"`
+	PurgeCacheURLs      []string `json:"purgeCacheURLs,omitempty"`
+	SelfSufficient      string   `json:"selfSufficient,omitempty"`
 	IsSecret            *bool    `json:"isSecret,omitempty"`
 	PublishOptionalData *bool    `json:"publishOptionalData,omitempty"`
 }

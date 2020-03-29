@@ -240,6 +240,49 @@ func TestGenerateUpdatePixelRequest(t *testing.T) {
 	}
 }
 
+func TestGenerateUpdatePixelRequestWithousOPtionalData(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testDate := "20190101"
+	testQuantity := "5"
+	cmd := &updatePixelCommand{
+		Username: testUsername,
+		ID:       testID,
+		Date:     testDate,
+		Quantity: testQuantity,
+		// OptionalData not specify
+		// OptionalData: testOptionalData,
+	}
+
+	// run
+	req, err := generateUpdatePixelRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "PUT" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s/%s", afterAPIBaseEnv, testUsername, testID, testDate) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"quantity":"%s"}`, testQuantity) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
 func TestGenerateIncrementPixelRequest(t *testing.T) {
 	// prepare
 	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
