@@ -24,7 +24,7 @@ type postPixelCommand struct {
 type postPixelParam struct {
 	Date         string `json:"date"`
 	Quantity     string `json:"quantity"`
-	OptionalData string `json:"optionalData"`
+	OptionalData string `json:"optionalData,omitempty"`
 }
 
 type getPixelCommand struct {
