@@ -47,13 +47,13 @@ var channelTests = []struct {
 		exitCode: 1,
 	},
 	{
-		name:     "get channel definition - not specify username",
-		input:    []string{"channels", "eelete", "--channel-id", "test-id"},
+		name:     "delete channel definition - not specify username",
+		input:    []string{"channels", "delete", "--channel-id", "test-id"},
 		exitCode: 1,
 	},
 	{
-		name:     "get channel definition - not specify channel-id",
-		input:    []string{"channels", "eelete", "--username", "c-know"},
+		name:     "delete channel definition - not specify channel-id",
+		input:    []string{"channels", "delete", "--username", "c-know"},
 		exitCode: 1,
 	},
 }
