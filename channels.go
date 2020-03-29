@@ -46,6 +46,11 @@ type getChannelsCommand struct {
 	Username string `short:"u" long:"username" description:"User name of channel owner."`
 }
 
+type deleteChannelCommand struct {
+	Username string `short:"u" long:"username" description:"User name of channel owner."`
+	ID       string `short:"g" long:"channel-id" description:"ID for identifying the channel." required:"true"`
+}
+
 func (cC *createChannelCommand) Execute(args []string) error {
 	req, err := generateCreateChannelRequest(cC)
 	if err != nil {
@@ -141,5 +146,32 @@ func generateGetChannelsRequest(gC *getChannelsCommand) (*http.Request, error) {
 		return nil, fmt.Errorf("Failed to generate get api request : %s", err)
 	}
 
+	return req, nil
+}
+
+func (dC *deleteChannelCommand) Execute(args []string) error {
+	req, err := generateDeleteChannelRequest(dC)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generateDeleteChannelRequest(dC *deleteChannelCommand) (*http.Request, error) {
+	username, err := getUsername(dC.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := generateRequestWithToken(
+		"DELETE",
+		fmt.Sprintf("v1/users/%s/channels/%s", username, dC.ID),
+		nil,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate delete api request : %s", err)
+	}
 	return req, nil
 }

@@ -46,6 +46,16 @@ var channelTests = []struct {
 		input:    []string{"channels", "get"},
 		exitCode: 1,
 	},
+	{
+		name:     "get channel definition - not specify username",
+		input:    []string{"channels", "eelete", "--channel-id", "test-id"},
+		exitCode: 1,
+	},
+	{
+		name:     "get channel definition - not specify channel-id",
+		input:    []string{"channels", "eelete", "--username", "c-know"},
+		exitCode: 1,
+	},
 }
 
 func TestChannel(t *testing.T) {
@@ -208,6 +218,43 @@ func TestGenerateGetChannelRequest(t *testing.T) {
 		t.Errorf("Unexpected request method. %s", req.Method)
 	}
 	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/channels", afterAPIBaseEnv, testUsername) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		defer req.Body.Close()
+		if err != nil {
+			t.Errorf("Failed to read request body. %s", err)
+		}
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateDeleteChannelRequest(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	cmd := &deleteChannelCommand{
+		Username: testUsername,
+		ID:       testID,
+	}
+
+	// run
+	req, err := generateDeleteChannelRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "DELETE" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/channels/%s", afterAPIBaseEnv, testUsername, testID) {
 		t.Errorf("Unexpected request path. %s", req.URL.String())
 	}
 	if req.Body != nil {
