@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func generateRequest(method string, path string, paramStruct interface{}) (*http.Request, error) {
@@ -17,12 +18,17 @@ func generateRequest(method string, path string, paramStruct interface{}) (*http
 	}
 
 	var reqBody io.Reader
+	buffer := &bytes.Buffer{}
 	if paramStruct != nil {
-		params, err := json.Marshal(paramStruct)
+		encoder := json.NewEncoder(buffer)
+		encoder.SetEscapeHTML(false)
+		err := encoder.Encode(paramStruct)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to marshal options to json : %s", err)
 		}
-		reqBody = bytes.NewBuffer(params)
+		str := string(buffer.Bytes())
+		str = strings.TrimRight(str, "\n")
+		reqBody = bytes.NewBuffer([]byte(str))
 	}
 
 	req, err := http.NewRequest(
