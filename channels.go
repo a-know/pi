@@ -10,6 +10,7 @@ type channelsCommand struct {
 	Create createChannelCommand `description:"create Channel" command:"create" subcommands-optional:"true"`
 	Update updateChannelCommand `description:"update Channel Definition" command:"update" subcommands-optional:"true"`
 	Get    getChannelsCommand   `description:"get Channel Definitions" command:"get" subcommands-optional:"true"`
+	Delete deleteChannelCommand `description:"delete Channel" command:"delete" subcommands-optional:"true"`
 }
 
 type createChannelCommand struct {
@@ -48,7 +49,7 @@ type getChannelsCommand struct {
 
 type deleteChannelCommand struct {
 	Username string `short:"u" long:"username" description:"User name of channel owner."`
-	ID       string `short:"g" long:"channel-id" description:"ID for identifying the channel." required:"true"`
+	ID       string `short:"i" long:"channel-id" description:"ID for identifying the channel." required:"true"`
 }
 
 func (cC *createChannelCommand) Execute(args []string) error {
