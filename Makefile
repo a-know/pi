@@ -17,7 +17,7 @@ devel-deps: deps
 	$(GO) get ${u} \
 	  golang.org/x/lint/golint             \
 	  github.com/rakyll/gotest             \
-		github.com/motemen/gobump/cmd/gobump \
+	  github.com/x-motemen/gobump \
 	  github.com/Songmu/goxz/cmd/goxz      \
 	  github.com/Songmu/ghch/cmd/ghch      \
 	  github.com/tcnksm/ghr
