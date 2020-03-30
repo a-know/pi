@@ -7,6 +7,7 @@ import (
 
 type notificationsCommand struct {
 	Post postNotificationCommand `description:"post Notification setting" command:"create" subcommands-optional:"true"`
+	Put  putNotificationCommand  `description:"update Notification setting" command:"update" subcommands-optional:"true"`
 	Get  getNotificationsCommand `description:"get Notifications" command:"get" subcommands-optional:"true"`
 }
 

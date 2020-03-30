@@ -7,7 +7,7 @@ import (
 )
 
 type channelsCommand struct {
-	Create createChannelCommand `description:"create Channel" command:"create" subcommands-optional:"true"`
+	Post   createChannelCommand `description:"create Channel" command:"create" subcommands-optional:"true"`
 	Update updateChannelCommand `description:"update Channel Definition" command:"update" subcommands-optional:"true"`
 	Get    getChannelsCommand   `description:"get Channel Definitions" command:"get" subcommands-optional:"true"`
 	Delete deleteChannelCommand `description:"delete Channel" command:"delete" subcommands-optional:"true"`
