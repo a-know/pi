@@ -6,9 +6,10 @@ import (
 )
 
 type notificationsCommand struct {
-	Post postNotificationCommand `description:"post Notification setting" command:"create" subcommands-optional:"true"`
-	Put  putNotificationCommand  `description:"update Notification setting" command:"update" subcommands-optional:"true"`
-	Get  getNotificationsCommand `description:"get Notifications" command:"get" subcommands-optional:"true"`
+	Post   postNotificationCommand   `description:"post Notification setting" command:"create" subcommands-optional:"true"`
+	Put    putNotificationCommand    `description:"update Notification setting" command:"update" subcommands-optional:"true"`
+	Get    getNotificationsCommand   `description:"get Notifications" command:"get" subcommands-optional:"true"`
+	Delete deleteNotificationCommand `description:"delete Notification" command:"delete" subcommands-optional:"true"`
 }
 
 type getNotificationsCommand struct {
@@ -53,6 +54,12 @@ type putNotificationParam struct {
 	Condition string `json:"condition,omitempty"`
 	Threshold string `json:"threshold,omitempty"`
 	ChannelID string `json:"channelID,omitempty"`
+}
+
+type deleteNotificationCommand struct {
+	Username string `short:"u" long:"username" description:"User name of owner."`
+	GraphID  string `short:"g" long:"graph-id" description:"ID for identifying the graph." required:"true"`
+	ID       string `short:"i" long:"notifiation-id" description:"ID for identifying the notification setting." required:"true"`
 }
 
 func (gN *getNotificationsCommand) Execute(args []string) error {
@@ -151,6 +158,34 @@ func generatePutNotificationRequest(pN *putNotificationCommand) (*http.Request, 
 	)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to generate create api request : %s", err)
+	}
+
+	return req, nil
+}
+
+func (dN *deleteNotificationCommand) Execute(args []string) error {
+	req, err := generateDeleteNotificationRequest(dN)
+	if err != nil {
+		return err
+	}
+
+	err = doRequest(req)
+	return err
+}
+
+func generateDeleteNotificationRequest(dN *deleteNotificationCommand) (*http.Request, error) {
+	username, err := getUsername(dN.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := generateRequestWithToken(
+		"DELETE",
+		fmt.Sprintf("v1/users/%s/graphs/%s/notifications/%s", username, dN.GraphID, dN.ID),
+		nil,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate get api request : %s", err)
 	}
 
 	return req, nil

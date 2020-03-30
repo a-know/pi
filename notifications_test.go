@@ -17,43 +17,53 @@ var notificationsTests = []struct {
 		exitCode: 1,
 	},
 	{
-		name:     "post notifications - not specify notification id",
+		name:     "post notification - not specify notification id",
 		input:    []string{"ntf", "create", "--channel-id", "test-id", "--username", "c-know", "--name", "test-name", "--graph-id", "hoge10", "--target", "quantity", "--condition", ">", "--threshold", "5"},
 		exitCode: 1,
 	},
 	{
-		name:     "post notifications - not specify channel id",
+		name:     "post notification - not specify channel id",
 		input:    []string{"ntf", "create", "--notification-id", "ntf-id", "--username", "c-know", "--name", "test-name", "--graph-id", "hoge10", "--target", "quantity", "--condition", ">", "--threshold", "5"},
 		exitCode: 1,
 	},
 	{
-		name:     "post notifications - not specify name",
+		name:     "post notification - not specify name",
 		input:    []string{"ntf", "create", "--notification-id", "ntf-id", "--username", "c-know", "--channel-id", "test-id", "--graph-id", "hoge10", "--target", "quantity", "--condition", ">", "--threshold", "5"},
 		exitCode: 1,
 	},
 	{
-		name:     "post notifications - not specify graph id",
+		name:     "post notification - not specify graph id",
 		input:    []string{"ntf", "create", "--notification-id", "ntf-id", "--username", "c-know", "--channel-id", "test-id", "--name", "test-name", "--target", "quantity", "--condition", ">", "--threshold", "5"},
 		exitCode: 1,
 	},
 	{
-		name:     "post notifications - not specify target",
+		name:     "post notification - not specify target",
 		input:    []string{"ntf", "create", "--notification-id", "ntf-id", "--username", "c-know", "--channel-id", "test-id", "--name", "test-name", "--graph-id", "hoge10", "--condition", ">", "--threshold", "5"},
 		exitCode: 1,
 	},
 	{
-		name:     "post notifications - not specify condition",
+		name:     "post notification - not specify condition",
 		input:    []string{"ntf", "create", "--notification-id", "ntf-id", "--username", "c-know", "--channel-id", "test-id", "--name", "test-name", "--graph-id", "hoge10", "--target", "quantity", "--threshold", "5"},
 		exitCode: 1,
 	},
 	{
-		name:     "post notifications - not specify threshold",
+		name:     "post notification - not specify threshold",
 		input:    []string{"ntf", "create", "--notification-id", "ntf-id", "--username", "c-know", "--channel-id", "test-id", "--name", "test-name", "--graph-id", "hoge10", "--target", "quantity", "--condition", ">"},
 		exitCode: 1,
 	},
 	{
-		name:     "put notifications - not specify graph id",
+		name:     "put notification - not specify graph id",
 		input:    []string{"ntf", "create", "--notification-id", "ntf-id", "--username", "c-know", "--channel-id", "test-id", "--name", "test-name", "--target", "quantity", "--condition", ">", "--threshold", "5"},
+		exitCode: 1,
+	},
+	{
+		name:     "delete notification - not specify graph id",
+		input:    []string{"ntf", "delete", "--notification-id", "ntf-id", "--username", "c-know"},
+		exitCode: 1,
+	},
+	{
+		name:     "delete notification - not specify notification id",
+		input:    []string{"ntf", "delete", "--graph-id", "hoge10", "--username", "c-know"},
 		exitCode: 1,
 	},
 }
@@ -250,6 +260,45 @@ func TestGeneratePutNotificationWithSomeParamRequest(t *testing.T) {
 		t.Errorf("Failed to read request body. %s", err)
 	}
 	if string(b) != fmt.Sprintf(`{"name":"%s","condition":"%s","threshold":"%s","channelID":"%s"}`, testName, testCondition, testThreshold, testChannelID) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateDeleteNotificationRequest(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testGraphID := "test-graph"
+	testID := "test-id"
+	cmd := &deleteNotificationCommand{
+		Username: testUsername,
+		GraphID:  testGraphID,
+		ID:       testID,
+	}
+
+	// run
+	req, err := generateDeleteNotificationRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "DELETE" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s/notifications/%s", afterAPIBaseEnv, testUsername, testGraphID, testID) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	if req.Body != nil {
+		b, err := ioutil.ReadAll(req.Body)
+		defer req.Body.Close()
+		if err != nil {
+			t.Errorf("Failed to read request body. %s", err)
+		}
 		t.Errorf("Unexpected request body. %s", string(b))
 	}
 }
