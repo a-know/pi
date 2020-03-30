@@ -48,10 +48,11 @@ type getGraphsCommand struct {
 }
 
 type graphSVGCommand struct {
-	Username string `short:"u" long:"username" description:"User name of graph owner."`
-	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Date     string `short:"d" long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
-	Mode     string `short:"m" long:"mode" description:"Specify the graph display mode."`
+	Username   string `short:"u" long:"username" description:"User name of graph owner."`
+	ID         string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date       string `short:"d" long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
+	Mode       string `short:"m" long:"mode" description:"Specify the graph display mode."`
+	Appearance string `short:"a" long:"appearance" description:"Specify the graph appearance mode."`
 }
 
 type updateGraphCommand struct {
@@ -201,8 +202,16 @@ func generateSVGUrl(gS *graphSVGCommand) (string, error) {
 		if gS.Mode != "" {
 			url = fmt.Sprintf("%s&mode=%s", url, gS.Mode)
 		}
+		if gS.Appearance != "" {
+			url = fmt.Sprintf("%s&appearance=%s", url, gS.Appearance)
+		}
 	} else if gS.Mode != "" {
 		url = fmt.Sprintf("%s?mode=%s", url, gS.Mode)
+		if gS.Appearance != "" {
+			url = fmt.Sprintf("%s&appearance=%s", url, gS.Appearance)
+		}
+	} else if gS.Appearance != "" {
+		url = fmt.Sprintf("%s?appearance=%s", url, gS.Appearance)
 	}
 	return url, nil
 }
