@@ -72,11 +72,6 @@ var graphTests = []struct {
 		exitCode: 1,
 	},
 	{
-		name:     "get svg graph url - invalid mode",
-		input:    []string{"graphs", "svg", "--graph-id", "test-id", "--username", "c-know", "--mode", "long"},
-		exitCode: 1,
-	},
-	{
 		name:     "update graph - not specify id",
 		input:    []string{"graphs", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--username", "c-know", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b"},
 		exitCode: 1,
