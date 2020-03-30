@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.2.0](https://github.com/a-know/pi/compare/v1.1.0...v1.2.0) (2020-03-30)
+
+* Follow pixela updates [#20](https://github.com/a-know/pi/pull/20) ([a-know](https://github.com/a-know))
+
 ## [v1.1.0](https://github.com/a-know/pi/compare/v1.0.3...v1.1.0) (2019-07-26)
 
 * Follow Pixela updates [#18](https://github.com/a-know/pi/pull/18) ([a-know](https://github.com/a-know))
