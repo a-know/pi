@@ -48,10 +48,11 @@ type getGraphsCommand struct {
 }
 
 type graphSVGCommand struct {
-	Username string `short:"u" long:"username" description:"User name of graph owner."`
-	ID       string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
-	Date     string `short:"d" long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
-	Mode     string `short:"m" long:"mode" description:"Specify the graph display mode." choice:"short" choice:"line"`
+	Username   string `short:"u" long:"username" description:"User name of graph owner."`
+	ID         string `short:"g" long:"graph-id" description:"ID for identifying the pixelation graph." required:"true"`
+	Date       string `short:"d" long:"date" description:"If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date."`
+	Mode       string `short:"m" long:"mode" description:"Specify the graph display mode."`
+	Appearance string `short:"a" long:"appearance" description:"Specify the graph appearance mode."`
 }
 
 type updateGraphCommand struct {
@@ -69,12 +70,12 @@ type updateGraphCommand struct {
 	HideOptionalData    *bool    `long:"hide-optional-data" description:"When this property is specified, the graph's each pixel optionalData will not be added to the generated SVG. For detail, see https://github.com/a-know/Pixela/wiki/How-to-support-Pixela-by-Patreon-%EF%BC%8F-Use-Limited-Features"`
 }
 type updateGraphParam struct {
-	Name                string   `json:"name"`
-	Unit                string   `json:"unit"`
-	Color               string   `json:"color"`
-	Timezone            string   `json:"timezone"`
-	PurgeCacheURLs      []string `json:"purgeCacheURLs"`
-	SelfSufficient      string   `json:"selfSufficient"`
+	Name                string   `json:"name,omitempty"`
+	Unit                string   `json:"unit,omitempty"`
+	Color               string   `json:"color,omitempty"`
+	Timezone            string   `json:"timezone,omitempty"`
+	PurgeCacheURLs      []string `json:"purgeCacheURLs,omitempty"`
+	SelfSufficient      string   `json:"selfSufficient,omitempty"`
 	IsSecret            *bool    `json:"isSecret,omitempty"`
 	PublishOptionalData *bool    `json:"publishOptionalData,omitempty"`
 }
@@ -201,8 +202,16 @@ func generateSVGUrl(gS *graphSVGCommand) (string, error) {
 		if gS.Mode != "" {
 			url = fmt.Sprintf("%s&mode=%s", url, gS.Mode)
 		}
+		if gS.Appearance != "" {
+			url = fmt.Sprintf("%s&appearance=%s", url, gS.Appearance)
+		}
 	} else if gS.Mode != "" {
 		url = fmt.Sprintf("%s?mode=%s", url, gS.Mode)
+		if gS.Appearance != "" {
+			url = fmt.Sprintf("%s&appearance=%s", url, gS.Appearance)
+		}
+	} else if gS.Appearance != "" {
+		url = fmt.Sprintf("%s?appearance=%s", url, gS.Appearance)
 	}
 	return url, nil
 }

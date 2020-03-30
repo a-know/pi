@@ -72,11 +72,6 @@ var graphTests = []struct {
 		exitCode: 1,
 	},
 	{
-		name:     "get svg graph url - invalid mode",
-		input:    []string{"graphs", "svg", "--graph-id", "test-id", "--username", "c-know", "--mode", "long"},
-		exitCode: 1,
-	},
-	{
 		name:     "update graph - not specify id",
 		input:    []string{"graphs", "update", "--name", "test-name", "--unit", "commits", "--color", "shibafu", "--username", "c-know", "--purge-cache-urls", "http://example.com/a", "--purge-cache-urls", "http://example.com/b"},
 		exitCode: 1,
@@ -335,11 +330,13 @@ func TestGenerateSVGUrlDateSpecified(t *testing.T) {
 	testID := "test-id"
 	testDate := "20190101"
 	testMode := ""
+	testAppearance := ""
 	cmd := &graphSVGCommand{
-		Username: testUsername,
-		ID:       testID,
-		Date:     testDate,
-		Mode:     testMode,
+		Username:   testUsername,
+		ID:         testID,
+		Date:       testDate,
+		Mode:       testMode,
+		Appearance: testAppearance,
 	}
 
 	// run
@@ -365,11 +362,13 @@ func TestGenerateSVGUrlModeSpecified(t *testing.T) {
 	testID := "test-id"
 	testDate := ""
 	testMode := "short"
+	testAppearance := ""
 	cmd := &graphSVGCommand{
-		Username: testUsername,
-		ID:       testID,
-		Date:     testDate,
-		Mode:     testMode,
+		Username:   testUsername,
+		ID:         testID,
+		Date:       testDate,
+		Mode:       testMode,
+		Appearance: testAppearance,
 	}
 
 	// run
@@ -387,7 +386,39 @@ func TestGenerateSVGUrlModeSpecified(t *testing.T) {
 	}
 }
 
-func TestGenerateSVGUrlBothParamSpecified(t *testing.T) {
+func TestGenerateSVGUrlAppearanceSpecified(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testDate := ""
+	testMode := ""
+	testAppearance := "dark"
+	cmd := &graphSVGCommand{
+		Username:   testUsername,
+		ID:         testID,
+		Date:       testDate,
+		Mode:       testMode,
+		Appearance: testAppearance,
+	}
+
+	// run
+	url, err := generateSVGUrl(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if url != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s?appearance=%s", afterAPIBaseEnv, testUsername, testID, testAppearance) {
+		t.Errorf("Unexpected url. %s", url)
+	}
+}
+
+func TestGenerateSVGUrlDateAndModeParamSpecified(t *testing.T) {
 	// prepare
 	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
 
@@ -395,11 +426,13 @@ func TestGenerateSVGUrlBothParamSpecified(t *testing.T) {
 	testID := "test-id"
 	testDate := "20190101"
 	testMode := "short"
+	testAppearance := ""
 	cmd := &graphSVGCommand{
-		Username: testUsername,
-		ID:       testID,
-		Date:     testDate,
-		Mode:     testMode,
+		Username:   testUsername,
+		ID:         testID,
+		Date:       testDate,
+		Mode:       testMode,
+		Appearance: testAppearance,
 	}
 
 	// run
@@ -413,6 +446,102 @@ func TestGenerateSVGUrlBothParamSpecified(t *testing.T) {
 		t.Errorf("Unexpected error occurs. %s", err)
 	}
 	if url != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s?date=%s&mode=%s", afterAPIBaseEnv, testUsername, testID, testDate, testMode) {
+		t.Errorf("Unexpected url. %s", url)
+	}
+}
+
+func TestGenerateSVGUrlModeAndAppearanceParamSpecified(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testDate := ""
+	testMode := "short"
+	testAppearance := "dark"
+	cmd := &graphSVGCommand{
+		Username:   testUsername,
+		ID:         testID,
+		Date:       testDate,
+		Mode:       testMode,
+		Appearance: testAppearance,
+	}
+
+	// run
+	url, err := generateSVGUrl(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if url != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s?mode=%s&appearance=%s", afterAPIBaseEnv, testUsername, testID, testMode, testAppearance) {
+		t.Errorf("Unexpected url. %s", url)
+	}
+}
+
+func TestGenerateSVGUrlDateAndAppearanceParamSpecified(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testDate := "20190331"
+	testMode := ""
+	testAppearance := "dark"
+	cmd := &graphSVGCommand{
+		Username:   testUsername,
+		ID:         testID,
+		Date:       testDate,
+		Mode:       testMode,
+		Appearance: testAppearance,
+	}
+
+	// run
+	url, err := generateSVGUrl(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if url != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s?date=%s&appearance=%s", afterAPIBaseEnv, testUsername, testID, testDate, testAppearance) {
+		t.Errorf("Unexpected url. %s", url)
+	}
+}
+
+func TestGenerateSVGUrlAllParamSpecified(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testDate := "20190331"
+	testMode := "short"
+	testAppearance := "dark"
+	cmd := &graphSVGCommand{
+		Username:   testUsername,
+		ID:         testID,
+		Date:       testDate,
+		Mode:       testMode,
+		Appearance: testAppearance,
+	}
+
+	// run
+	url, err := generateSVGUrl(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if url != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s?date=%s&mode=%s&appearance=%s", afterAPIBaseEnv, testUsername, testID, testDate, testMode, testAppearance) {
 		t.Errorf("Unexpected url. %s", url)
 	}
 }
@@ -503,6 +632,57 @@ func TestGenerateUpdateGraphRequestWithSecret(t *testing.T) {
 		t.Errorf("Failed to read request body. %s", err)
 	}
 	if string(b) != fmt.Sprintf(`{"name":"%s","unit":"%s","color":"%s","timezone":"%s","purgeCacheURLs":["%s"],"selfSufficient":"%s","isSecret":%t}`, testName, testUnit, testColor, testTimezone, testPurgeCacheURLs[0], testSelfSufficient, testIsSecret) {
+		t.Errorf("Unexpected request body. %s", string(b))
+	}
+}
+
+func TestGenerateUpdateGraphRequestWithSomeParams(t *testing.T) {
+	// prepare
+	beforeAPIBaseEnv, beforeTokenEnv, afterAPIBaseEnv, _ := prepare()
+
+	testUsername := "c-know"
+	testID := "test-id"
+	testName := "test-name"
+	testColor := "ajisai"
+	testTimezone := "asia/Tokyo"
+	testSelfSufficient := "none"
+	testPurgeCacheURLs := []string{"http://test.example.com/"}
+	testIsSecret := true
+	cmd := &updateGraphCommand{
+		Username: testUsername,
+		ID:       testID,
+		Name:     testName,
+		// Unit not spesify
+		// Unit:           testUnit,
+		Color:          testColor,
+		Timezone:       testTimezone,
+		PurgeCacheURLs: testPurgeCacheURLs,
+		SelfSufficient: testSelfSufficient,
+		Secret:         &testIsSecret,
+	}
+
+	// run
+	req, err := generateUpdateGraphRequest(cmd)
+
+	// cleanup
+	cleanup(beforeAPIBaseEnv, beforeTokenEnv)
+
+	// assertion
+	if err != nil {
+		t.Errorf("Unexpected error occurs. %s", err)
+	}
+	if req.Method != "PUT" {
+		t.Errorf("Unexpected request method. %s", req.Method)
+	}
+	if req.URL.String() != fmt.Sprintf("https://%s/v1/users/%s/graphs/%s", afterAPIBaseEnv, testUsername, testID) {
+		t.Errorf("Unexpected request path. %s", req.URL.String())
+	}
+	b, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to read request body. %s", err)
+	}
+	if string(b) != fmt.Sprintf(`{"name":"%s","color":"%s","timezone":"%s","purgeCacheURLs":["%s"],"selfSufficient":"%s","isSecret":%t}`, testName, testColor, testTimezone, testPurgeCacheURLs[0], testSelfSufficient, testIsSecret) {
 		t.Errorf("Unexpected request body. %s", string(b))
 	}
 }

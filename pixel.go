@@ -24,7 +24,7 @@ type postPixelCommand struct {
 type postPixelParam struct {
 	Date         string `json:"date"`
 	Quantity     string `json:"quantity"`
-	OptionalData string `json:"optionalData"`
+	OptionalData string `json:"optionalData,omitempty"`
 }
 
 type getPixelCommand struct {
@@ -42,7 +42,7 @@ type updatePixelCommand struct {
 }
 type updatePixelParam struct {
 	Quantity     string `json:"quantity"`
-	OptionalData string `json:"optionalData"`
+	OptionalData string `json:"optionalData,omitempty"`
 }
 
 type incrementPixelCommand struct {

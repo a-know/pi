@@ -34,8 +34,8 @@ type updateUserCommand struct {
 }
 
 type updateUserParams struct {
-	NewToken   string `json:"newToken"`
-	ThanksCode string `json:"thanksCode"`
+	NewToken   string `json:"newToken,omitempty"`
+	ThanksCode string `json:"thanksCode,omitempty"`
 }
 
 type deleteUserCommand struct {
