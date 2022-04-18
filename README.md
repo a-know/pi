@@ -16,7 +16,7 @@
 
 ## Installation
 
-    % go get github.com/a-know/pi/cmd/pi
+    % go install github.com/a-know/pi/cmd/pi@latest
 
 OR
 
